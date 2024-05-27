@@ -2,9 +2,7 @@ package ensah.com.restapi_spring_project.services;
 
 
 import ensah.com.restapi_spring_project.Dto.Responce.DepartementDto;
-import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
-import ensah.com.restapi_spring_project.models.Departement;
-import ensah.com.restapi_spring_project.models.Prof;
+import ensah.com.restapi_spring_project.models.element.Department;
 import ensah.com.restapi_spring_project.repositories.DepartementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,10 +28,10 @@ public class DepartementService {
                 .collect(Collectors.toList());
     }
 
-        private DepartementDto mapToDepartementDto(Departement departement) {
+        private DepartementDto mapToDepartementDto(Department department) {
         return DepartementDto.builder()
-                .id(departement.getId())
-                .departement_name(departement.getName())
+                .id(department.getId())
+                .departement_name(department.getName())
                 .build();
     }
 }
