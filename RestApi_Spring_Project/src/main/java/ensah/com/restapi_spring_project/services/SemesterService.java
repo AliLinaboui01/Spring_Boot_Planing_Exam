@@ -1,7 +1,7 @@
 package ensah.com.restapi_spring_project.services;
 
 
-import ensah.com.restapi_spring_project.models.Semester;
+import ensah.com.restapi_spring_project.models.exam.Semester;
 import ensah.com.restapi_spring_project.repositories.SemesterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

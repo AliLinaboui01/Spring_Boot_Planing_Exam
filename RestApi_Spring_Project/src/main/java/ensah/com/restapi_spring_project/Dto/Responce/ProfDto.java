@@ -1,8 +1,6 @@
 package ensah.com.restapi_spring_project.Dto.Responce;
 
 
-import ensah.com.restapi_spring_project.models.Departement;
-import ensah.com.restapi_spring_project.models.Field;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

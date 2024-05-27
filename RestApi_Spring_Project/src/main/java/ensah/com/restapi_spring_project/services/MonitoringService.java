@@ -1,7 +1,7 @@
 package ensah.com.restapi_spring_project.services;
 
 
-import ensah.com.restapi_spring_project.models.Monitoring;
+import ensah.com.restapi_spring_project.models.personnel.Monitoring;
 import ensah.com.restapi_spring_project.repositories.MonitoringRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

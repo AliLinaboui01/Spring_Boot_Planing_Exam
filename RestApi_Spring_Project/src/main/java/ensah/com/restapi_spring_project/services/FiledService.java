@@ -1,9 +1,7 @@
 package ensah.com.restapi_spring_project.services;
 
 import ensah.com.restapi_spring_project.Dto.Responce.FiledDto;
-import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
-import ensah.com.restapi_spring_project.models.Field;
-import ensah.com.restapi_spring_project.models.Prof;
+import ensah.com.restapi_spring_project.models.element.Field;
 import ensah.com.restapi_spring_project.repositories.FiledRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

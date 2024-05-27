@@ -2,7 +2,7 @@ package ensah.com.restapi_spring_project.services;
 
 
 import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
-import ensah.com.restapi_spring_project.models.Prof;
+import ensah.com.restapi_spring_project.models.personnel.Prof;
 import ensah.com.restapi_spring_project.repositories.ProfRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class ProfService {
                 .firstName(prof.getFirstName())
                 .lastName(prof.getLastName())
                 .email(prof.getEmail())
-                .departement_name(prof.getDepartement().getName())
+                .departement_name(prof.getDepartment().getName())
                 .field_name(prof.getField().getName())
                 .build();
     }

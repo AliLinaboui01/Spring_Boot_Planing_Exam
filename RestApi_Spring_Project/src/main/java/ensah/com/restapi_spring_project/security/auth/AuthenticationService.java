@@ -1,6 +1,9 @@
 package ensah.com.restapi_spring_project.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ensah.com.restapi_spring_project.models.personnel.Admin;
+import ensah.com.restapi_spring_project.models.personnel.Prof;
+import ensah.com.restapi_spring_project.repositories.IAdminRepository;
 import ensah.com.restapi_spring_project.security.config.JwtService;
 import ensah.com.restapi_spring_project.security.token.Token;
 import ensah.com.restapi_spring_project.security.token.TokenRepository;
@@ -27,6 +30,7 @@ import java.io.IOException;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final IAdminRepository adminRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -40,6 +44,7 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .build();
         var savedUser =userRepository.save(user);
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
