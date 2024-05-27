@@ -35,7 +35,7 @@ public class Monitoring {
 
    @ManyToOne
    @JoinColumn(name = "coordinateur_prf_id")
-    private Prof prof_coordinator;
+    private Prof profCoordinator;
 
    @ManyToOne
    @JoinColumn(name="admin-respo_id")

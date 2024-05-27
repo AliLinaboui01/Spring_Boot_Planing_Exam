@@ -21,4 +21,10 @@ public class ExamService {
     public List<Exam> getAllExams() {
         return examRepository.findAll();
     }
+
+
+    public void save(Exam exam) {
+
+        //
+    }
 }

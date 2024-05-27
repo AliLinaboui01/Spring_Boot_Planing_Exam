@@ -2,10 +2,12 @@ package ensah.com.restapi_spring_project.controllers.personnel;
 
 
 import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
+import ensah.com.restapi_spring_project.models.personnel.Prof;
 import ensah.com.restapi_spring_project.services.ProfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,5 +32,12 @@ public class ProfController {
     public List<ProfDto> getAllProfs() {
 
         return profService.getAllProfs();
+    }
+
+
+    @PostMapping("/profs")
+    @PreAuthorize("hasAuthority('admin:create')")
+    public void creaetNewProf(Prof prof) {
+         profService.save(prof);
     }
 }

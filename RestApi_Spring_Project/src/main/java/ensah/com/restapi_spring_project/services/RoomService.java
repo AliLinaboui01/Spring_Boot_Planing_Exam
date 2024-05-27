@@ -21,4 +21,8 @@ public class RoomService {
     public List<Room> getAllRooms() {
        return roomRepository.findAll();
     }
+
+    public void save(Room room) {
+       roomRepository.save(room);
+    }
 }

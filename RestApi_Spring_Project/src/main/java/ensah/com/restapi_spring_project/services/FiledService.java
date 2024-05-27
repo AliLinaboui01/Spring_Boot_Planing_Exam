@@ -36,4 +36,9 @@ public class FiledService {
 
                 .build();
     }
+
+
+    public void save(Field field) {
+        filedRepository.save(field);
+    }
 }

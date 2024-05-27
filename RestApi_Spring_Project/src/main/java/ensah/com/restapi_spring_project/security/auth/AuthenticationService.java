@@ -3,7 +3,6 @@ package ensah.com.restapi_spring_project.security.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ensah.com.restapi_spring_project.models.personnel.Admin;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
-import ensah.com.restapi_spring_project.repositories.IAdminRepository;
 import ensah.com.restapi_spring_project.security.config.JwtService;
 import ensah.com.restapi_spring_project.security.token.Token;
 import ensah.com.restapi_spring_project.security.token.TokenRepository;
@@ -11,6 +10,8 @@ import ensah.com.restapi_spring_project.security.token.TokenType;
 import ensah.com.restapi_spring_project.security.user.Role;
 import ensah.com.restapi_spring_project.security.user.User;
 import ensah.com.restapi_spring_project.security.user.UserRepository;
+import ensah.com.restapi_spring_project.services.AdminService;
+import ensah.com.restapi_spring_project.services.ProfService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -30,7 +29,8 @@ import java.io.IOException;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final IAdminRepository adminRepository;
+ private final AdminService adminService;
+    private final ProfService profService;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -44,6 +44,21 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .build();
         var savedUser =userRepository.save(user);
+// here i will se if User is admin i will persist also in Admin Entity
+      if(request.getRole() == Role.ADMIN) {
+          Admin admin = new Admin();
+          admin.setUser(savedUser);
+          adminService.save(admin);
+
+      }
+      // here i will se if User is prof i will persist also in Admin Entity
+      else if (request.getRole() == Role.PROFESSOR) {
+          Prof prof = new Prof();
+          prof.setDepartment(null);
+          prof.setField(null);
+          prof.setUser(savedUser);
+          profService.save(prof);
+      }
 
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -51,8 +66,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
-                .build()
-                ;
+                .build();
     }
 
 

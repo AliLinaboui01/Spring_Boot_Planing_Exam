@@ -23,4 +23,8 @@ public class GroupService {
 
         return groupRepository.findAll();
     }
+
+    public void save(Group group) {
+        groupRepository.save(group);
+    }
 }

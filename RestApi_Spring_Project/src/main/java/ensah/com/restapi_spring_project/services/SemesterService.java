@@ -23,4 +23,9 @@ public class SemesterService {
     public List<Semester> getAllSemester() {
         return semesterRepository.findAll();
     }
+
+
+    public void save(Semester semester) {
+        semesterRepository.save(semester);
+    }
 }

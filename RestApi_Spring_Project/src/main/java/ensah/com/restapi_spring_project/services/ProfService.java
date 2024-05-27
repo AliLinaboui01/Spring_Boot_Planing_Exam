@@ -28,13 +28,20 @@ public class ProfService {
     }
 
     private ProfDto mapToProfDto(Prof prof) {
+
         return ProfDto.builder()
-                .id(prof.getId())
-                .firstName(prof.getFirstName())
-                .lastName(prof.getLastName())
-                .email(prof.getEmail())
+                .id(prof.getUser().getId())
+                .firstName(prof.getUser().getFirstName())
+                .lastName(prof.getUser().getLastName())
+                .email(prof.getUser().getEmail())
                 .departement_name(prof.getDepartment().getName())
                 .field_name(prof.getField().getName())
                 .build();
     }
+
+    public void save(Prof prof) {
+        profRepository.save(prof);
+    }
+
+
 }
