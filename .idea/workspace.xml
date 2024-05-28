@@ -5,32 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5ea7088-46f7-475c-a3fd-15be3682eb63" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/Dto/Responce/PedagogicalElementDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/Dto/Responce/PedagogicalElementDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/LevelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/LevelController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/PedagogicalElementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/PedagogicalElementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/Dto/Responce/GroupDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/Dto/Responce/GroupDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/personnel/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/personnel/GroupController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/personnel/ProfController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/personnel/ProfController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Monitoring.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Monitoring.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Group.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Prof.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/personnel/Prof.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/repositories/IAdminRepository.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/security/auth/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/security/auth/AuthenticationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/security/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/security/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/DepartementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/DepartementService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ElementTypeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ElementTypeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ExamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ExamService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ExamTypeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ExamTypeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/FiledService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/FiledService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/LevelService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/LevelService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/MonitoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/MonitoringService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/PedagogicalElementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/PedagogicalElementService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ProfService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/ProfService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/RoomService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/SemesterService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/SemesterService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/SessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/SessionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +36,9 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -64,26 +50,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.RestApiSpringProjectApplication.executor": "Run",
-    "git-widget-placeholder": "register",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Storage/Tech/spring/GI-2_SpringProhectApi/Spring_Boot_Planing_Exam/RestApi_Spring_Project",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.RestApiSpringProjectApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;register&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Storage/Tech/spring/GI-2_SpringProhectApi/Spring_Boot_Planing_Exam/RestApi_Spring_Project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="RestApiSpringProjectApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
@@ -112,7 +98,8 @@
       <workItem from="1716765998965" duration="57000" />
       <workItem from="1716819495336" duration="4535000" />
       <workItem from="1716824580506" duration="1188000" />
-      <workItem from="1716826259063" duration="9626000" />
+      <workItem from="1716826259063" duration="9713000" />
+      <workItem from="1716851620917" duration="12014000" />
     </task>
     <servers />
   </component>

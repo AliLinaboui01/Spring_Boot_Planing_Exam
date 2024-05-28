@@ -1,7 +1,6 @@
 package ensah.com.restapi_spring_project.models.personnel;
 
 
-import ensah.com.restapi_spring_project.models.personnel.Prof;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

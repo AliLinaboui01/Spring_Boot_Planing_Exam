@@ -29,7 +29,7 @@ import java.io.IOException;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
- private final AdminService adminService;
+    private final AdminService adminService;
     private final ProfService profService;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
