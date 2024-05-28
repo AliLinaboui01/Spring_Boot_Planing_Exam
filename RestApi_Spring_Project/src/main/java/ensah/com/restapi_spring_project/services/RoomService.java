@@ -1,5 +1,7 @@
 package ensah.com.restapi_spring_project.services;
 
+import ensah.com.restapi_spring_project.Dto.Responce.room.RoomResponse;
+import ensah.com.restapi_spring_project.Dto.request.room.CreateRoomDto;
 import ensah.com.restapi_spring_project.models.exam.Room;
 import ensah.com.restapi_spring_project.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,17 @@ public class RoomService {
        return roomRepository.findAll();
     }
 
-    public void save(Room room) {
-       roomRepository.save(room);
+
+    public RoomResponse createRoom(CreateRoomDto roomDto){
+
+       var room = Room.builder()
+               .name(roomDto.getName())
+               .capacity(roomDto.getCapacity())
+               .build();
+        roomRepository.save(room);
+        return RoomResponse.builder()
+                .name(roomDto.getName())
+                .capacity(roomDto.getCapacity())
+                .build();
     }
 }
