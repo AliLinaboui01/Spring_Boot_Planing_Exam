@@ -35,7 +35,7 @@ public class GroupController {
 
     // get with DTO
 
-    @GetMapping("group/prof_groupsdtos")
+    @GetMapping("group/prof_groupsDto")
     public List<GroupDto> getAllGroupsDto() {
         return groupService.getAllGroupDtos();
     }
@@ -50,7 +50,7 @@ public class GroupController {
     // this function to affect profs to groups
 
     @PostMapping("group/prof_groups/{groupId}")
-    public ResponseEntity<?> createGoupOfProfs(@PathVariable Integer groupId, @RequestBody Group profs) {
+    public ResponseEntity<?> createGroupOfProfs(@PathVariable Integer groupId, @RequestBody Group profs) {
         boolean success = groupService.createGroupWithProfs(groupId, profs);
         if (success) {
             return ResponseEntity.ok().body("Group created successfully with associated professors.");
