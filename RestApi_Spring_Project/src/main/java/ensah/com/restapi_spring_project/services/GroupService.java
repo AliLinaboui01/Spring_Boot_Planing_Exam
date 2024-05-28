@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,7 +61,29 @@ public class GroupService {
         return profDto;
     }
 
+    // create grp just with grp name
     public void save(Group group) {
         groupRepository.save(group);
     }
+
+
+
+
+    // ceate group of profs
+    public boolean createGroupWithProfs(Integer id, Group group) {
+        try {
+            Optional<Group> groupToUpdateOptional = groupRepository.findById(id);
+            Group groupToUpdate = groupToUpdateOptional.orElseThrow(() -> new RuntimeException("Group Not Found"));
+
+            groupToUpdate.setGroup_prof(group.getGroup_prof());
+            groupRepository.save(groupToUpdate);
+
+            return true;
+        } catch (Exception e) {
+            // Log the exception if necessary
+            return false;
+        }
+}
+
+
 }

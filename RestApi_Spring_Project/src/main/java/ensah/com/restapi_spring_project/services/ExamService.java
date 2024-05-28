@@ -5,6 +5,7 @@ import ensah.com.restapi_spring_project.models.exam.Exam;
 import ensah.com.restapi_spring_project.repositories.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,5 +27,17 @@ public class ExamService {
     public void save(Exam exam) {
 
         //
+    }
+
+
+    @Transactional
+    public boolean createExam(Exam exam) {
+        try {
+            examRepository.save(exam);
+            return true;
+        } catch (Exception e) {
+            // Log the exception if necessary
+            return false;
+        }
     }
 }
