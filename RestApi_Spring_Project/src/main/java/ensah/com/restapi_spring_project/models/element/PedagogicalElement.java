@@ -1,11 +1,14 @@
 package ensah.com.restapi_spring_project.models.element;
 
+import ensah.com.restapi_spring_project.models.exam.Exam;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -35,5 +38,8 @@ public class PedagogicalElement {
     @ManyToOne
     @JoinColumn(name = "element_type_id")
     private ElementType elementType;
+
+    @OneToMany
+    private List<Exam> exams;
 
 }
