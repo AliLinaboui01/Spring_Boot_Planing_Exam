@@ -1,6 +1,7 @@
 package ensah.com.restapi_spring_project.models.exam;
 
 
+import ensah.com.restapi_spring_project.models.element.PedagogicalElement;
 import ensah.com.restapi_spring_project.models.personnel.Monitoring;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -48,4 +49,7 @@ public class Exam {
     @JoinColumn(name="semester_id")
     private Semester semester;
 
+    @ManyToOne
+    @JoinColumn(name = "pedagogical_elem_id")
+    private PedagogicalElement pedagogicalElement;
 }
