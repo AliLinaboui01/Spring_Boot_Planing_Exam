@@ -34,4 +34,9 @@ public class DepartementService {
                 .departement_name(department.getName())
                 .build();
     }
+
+
+    public void save(Department department) {
+        departementRepository.save(department);
+    }
 }

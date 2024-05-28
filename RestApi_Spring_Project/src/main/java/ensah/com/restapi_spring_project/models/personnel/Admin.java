@@ -6,13 +6,19 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
-@Builder
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Admin extends User {
+@Data
+public class Admin  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
     @OneToMany(mappedBy = "adminMonitoring")
     private List<Monitoring> responsableOfMonitoring;
 }

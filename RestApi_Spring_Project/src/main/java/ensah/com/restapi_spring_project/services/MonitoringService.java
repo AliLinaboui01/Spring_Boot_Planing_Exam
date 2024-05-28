@@ -21,4 +21,10 @@ public class MonitoringService {
 
         return monitoringRepository.findAll();
     }
+
+
+
+    public void save(Monitoring monitoring) {
+        monitoringRepository.save(monitoring);
+    }
 }

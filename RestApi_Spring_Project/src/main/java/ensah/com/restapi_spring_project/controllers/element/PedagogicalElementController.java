@@ -1,12 +1,12 @@
 package ensah.com.restapi_spring_project.controllers.element;
 
 
+import ensah.com.restapi_spring_project.Dto.Responce.PedagogicalElementDto;
 import ensah.com.restapi_spring_project.models.element.PedagogicalElement;
 import ensah.com.restapi_spring_project.services.PedagogicalElementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,7 +23,20 @@ public class PedagogicalElementController {
         this.pedagogicalElementService = pedagogicalElementService;
     }
 
-    public List<PedagogicalElement> getAllPedagogicalElement() {
+
+    @GetMapping("/element_pedacogics")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public List<PedagogicalElementDto> getAllPedagogicalElement() {
         return  pedagogicalElementService.getAllPedagogicalElements();
     }
+
+
+    @PostMapping("/element_pedacogics")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public void createElementPedagogical(@RequestBody PedagogicalElement pedagogicalElement) {
+          pedagogicalElementService.save(pedagogicalElement);
+    }
+
+
+
 }

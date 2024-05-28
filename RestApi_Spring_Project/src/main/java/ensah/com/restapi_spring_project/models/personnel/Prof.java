@@ -9,39 +9,37 @@ import lombok.*;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Prof{
+public class Prof {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    private Integer id;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="department_id")
+    @JoinColumn(name = "department_id", nullable = true)
     private Department department;
 
-
     @ManyToOne
-    @JoinColumn(name = "filed_id")
+    @JoinColumn(name = "field_id", nullable = true)
     private Field field;
 
-
     @ManyToMany
-    @JoinTable(name = "profs_monitoring",
-            joinColumns = @JoinColumn(name = "monitoring_id"),
-            inverseJoinColumns = @JoinColumn(name = "prof_id"))
-    private List<Monitoring> profs_monitoring;
+    @JoinTable(
+            name = "profs_monitoring",
+            joinColumns = @JoinColumn(name = "prof_id"),
+            inverseJoinColumns = @JoinColumn(name = "monitoring_id")
+    )
+    private List<Monitoring> profsMonitoring;
 
-    @OneToMany(mappedBy = "prof_coordinator")
-    private List<Monitoring> ProfCoordinatorMonitoring;
-
-
+    @OneToMany(mappedBy = "profCoordinator", cascade = CascadeType.ALL)
+    private List<Monitoring> profCoordinatorMonitoring;
 
 }

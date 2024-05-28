@@ -22,4 +22,8 @@ public class ExamTypeService {
     public List<ExamType>  getAllExamType() {
         return examTypeRepository.findAll();
     }
+
+    public void save(ExamType examType) {
+        examTypeRepository.save(examType);
+    }
 }

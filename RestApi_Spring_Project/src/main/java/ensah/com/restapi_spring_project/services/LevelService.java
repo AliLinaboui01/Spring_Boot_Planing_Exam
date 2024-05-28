@@ -21,4 +21,9 @@ public class LevelService {
 
         return  levelRepository.findAll();
     }
+
+
+    public void save(Level level) {
+        levelRepository.save(level);
+    }
 }

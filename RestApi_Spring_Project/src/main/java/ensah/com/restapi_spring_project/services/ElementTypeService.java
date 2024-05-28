@@ -23,4 +23,8 @@ public class ElementTypeService {
     public List<ElementType> getAllElementType() {
         return elementTypeRepository.findAll();
     }
+
+    public void save(ElementType elementType) {
+        elementTypeRepository.save(elementType);
+    }
 }
