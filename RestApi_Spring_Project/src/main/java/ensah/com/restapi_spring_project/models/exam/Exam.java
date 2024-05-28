@@ -53,3 +53,4 @@ public class Exam {
     @JoinColumn(name = "pedagogical_elem_id")
     private PedagogicalElement pedagogicalElement;
 }
+

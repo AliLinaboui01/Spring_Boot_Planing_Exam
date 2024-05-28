@@ -1,13 +1,22 @@
 package ensah.com.restapi_spring_project.services;
 
 
+import ensah.com.restapi_spring_project.Dto.Request.PedagogicalElementRequestDto;
 import ensah.com.restapi_spring_project.Dto.Responce.DepartementDto;
 import ensah.com.restapi_spring_project.Dto.Responce.PedagogicalElementDto;
 import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
 import ensah.com.restapi_spring_project.models.element.Department;
+import ensah.com.restapi_spring_project.models.element.ElementType;
+import ensah.com.restapi_spring_project.models.element.Level;
 import ensah.com.restapi_spring_project.models.element.PedagogicalElement;
+import ensah.com.restapi_spring_project.models.personnel.Prof;
+import ensah.com.restapi_spring_project.repositories.ElementTypeRepository;
+import ensah.com.restapi_spring_project.repositories.LevelRepository;
 import ensah.com.restapi_spring_project.repositories.PedagogicalElementRepository;
+import ensah.com.restapi_spring_project.repositories.ProfRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +26,16 @@ import java.util.stream.Collectors;
 public class PedagogicalElementService {
 
     private final PedagogicalElementRepository pedagogicalElementRepository;
+    private final ProfRepository profRepository;
+    private final LevelRepository levelRepository;
+    private final ElementTypeRepository elementTypeRepository;
 @Autowired
-    public PedagogicalElementService(PedagogicalElementRepository pedagogicalElementRepository) {
+    public PedagogicalElementService(PedagogicalElementRepository pedagogicalElementRepository, ProfRepository profRepository, LevelRepository levelRepository, ElementTypeRepository elementTypeRepository) {
         this.pedagogicalElementRepository = pedagogicalElementRepository;
-    }
+    this.profRepository = profRepository;
+    this.levelRepository = levelRepository;
+    this.elementTypeRepository = elementTypeRepository;
+}
 
     public List<PedagogicalElementDto> getAllPedagogicalElements() {
     return pedagogicalElementRepository.findAll().stream()
@@ -57,8 +72,37 @@ public class PedagogicalElementService {
                 .build();
     }
 
-    public void save(PedagogicalElement pedagogicalElement) {
-    pedagogicalElementRepository.save(pedagogicalElement);
+    public ResponseEntity<String> save(PedagogicalElementRequestDto pedagogicalElementDto) {
+        try {
+            // Fetch related entities
+            Prof profCord = profRepository.findById(pedagogicalElementDto.getProf_cord_id())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid prof_cord_id"));
+            Prof profOfElem = profRepository.findById(pedagogicalElementDto.getProf_of_elem_id())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid prof_of_elem_id"));
+            Level level = levelRepository.findById(pedagogicalElementDto.getLevel_id())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid level_id"));
+            ElementType elementType = elementTypeRepository.findById(pedagogicalElementDto.getElementType_id())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid elementType_id"));
+
+            // Build PedagogicalElement
+            PedagogicalElement pedagogicalElement = PedagogicalElement.builder()
+                    .title(pedagogicalElementDto.getTitle())
+                    .prof_cord(profCord)
+                    .prof_of_elem(profOfElem)
+                    .level(level)
+                    .elementType(elementType)
+                    .build();
+
+            // Save the PedagogicalElement
+            pedagogicalElementRepository.save(pedagogicalElement);
+            return ResponseEntity.ok("Pedagogical element created successfully");
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to create this pedagogical element");
+        }
     }
 
 

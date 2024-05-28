@@ -5,9 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5ea7088-46f7-475c-a3fd-15be3682eb63" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/DepartmentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/element/PedagogicalElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/element/PedagogicalElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/DepartementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/DepartementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/ElementTypeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/ElementTypeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/PedagogicalElementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/controllers/element/PedagogicalElementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/element/Department.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/element/Department.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/exam/Exam.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/models/exam/Exam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/DepartementService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/PedagogicalElementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/RestApi_Spring_Project/src/main/java/ensah/com/restapi_spring_project/services/PedagogicalElementService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +102,7 @@
       <workItem from="1716826259063" duration="9713000" />
       <workItem from="1716851620917" duration="15759000" />
       <workItem from="1716869096690" duration="5604000" />
-      <workItem from="1716916208743" duration="882000" />
+      <workItem from="1716916208743" duration="10445000" />
     </task>
     <servers />
   </component>
