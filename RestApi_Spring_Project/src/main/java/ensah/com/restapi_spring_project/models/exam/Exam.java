@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.text.DateFormat;
+import java.time.Year;
 import java.util.Date;
 import java.util.List;
 
@@ -24,8 +26,9 @@ public class Exam {
 
     private Date start_date;
     private Date end_date;
-    private Date end_date_exact;
-
+    private int exactTime;
+    private int defaultTime;
+    private Year year;
     private String exam_test;
 
     private String pv;

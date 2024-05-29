@@ -1,7 +1,7 @@
 package ensah.com.restapi_spring_project.services;
 
 import ensah.com.restapi_spring_project.Dto.Responce.room.RoomResponse;
-import ensah.com.restapi_spring_project.Dto.request.room.CreateRoomDto;
+import ensah.com.restapi_spring_project.Dto.Request.room.CreateRoomDto;
 import ensah.com.restapi_spring_project.models.exam.Room;
 import ensah.com.restapi_spring_project.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
