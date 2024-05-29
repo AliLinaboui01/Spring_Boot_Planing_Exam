@@ -1,4 +1,4 @@
-package ensah.com.restapi_spring_project.Dto.request.field;
+package ensah.com.restapi_spring_project.Dto.Request.field;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

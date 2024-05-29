@@ -1,4 +1,4 @@
-package ensah.com.restapi_spring_project.Dto.request.room;
+package ensah.com.restapi_spring_project.Dto.Request.room;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
