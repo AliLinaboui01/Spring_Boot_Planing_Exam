@@ -36,23 +36,23 @@ public class Exam {
 
 
 
-    @OneToMany(mappedBy = "exam")
+    @OneToMany(mappedBy = "exam" , cascade = CascadeType.ALL)
     private List<Monitoring> ListExamMonitoring;
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn(name = "session_id")
     private Session session;
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn(name = "type_exam_id")
     private ExamType examType;
 
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn(name="semester_id")
     private Semester semester;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pedagogical_elem_id")
     private PedagogicalElement pedagogicalElement;
 }

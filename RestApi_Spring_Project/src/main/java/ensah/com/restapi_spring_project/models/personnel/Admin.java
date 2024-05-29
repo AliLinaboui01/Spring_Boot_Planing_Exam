@@ -16,9 +16,9 @@ public class Admin  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @OneToOne( cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    @OneToMany(mappedBy = "adminMonitoring")
+    @OneToMany(mappedBy = "adminMonitoring" , cascade = CascadeType.ALL)
     private List<Monitoring> responsableOfMonitoring;
 }

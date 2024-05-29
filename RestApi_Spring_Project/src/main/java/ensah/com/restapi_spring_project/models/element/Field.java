@@ -23,6 +23,6 @@ public class Field {
 
     private String name;
 
-    @OneToMany(mappedBy = "field" , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "field" , fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Prof> profs;
 }

@@ -23,6 +23,6 @@ public class Semester {
     private String title;
 
 
-    @OneToMany(mappedBy = "semester")
+    @OneToMany(mappedBy = "semester" ,  cascade = CascadeType.ALL)
     private List<Exam> examList;
 }

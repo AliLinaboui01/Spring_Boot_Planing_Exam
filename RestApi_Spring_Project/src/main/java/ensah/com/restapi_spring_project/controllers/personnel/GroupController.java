@@ -1,6 +1,7 @@
 package ensah.com.restapi_spring_project.controllers.personnel;
 
 
+import ensah.com.restapi_spring_project.Dto.Request.group.GroupDtoRequest;
 import ensah.com.restapi_spring_project.Dto.Responce.GroupDto;
 import ensah.com.restapi_spring_project.models.personnel.Group;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
@@ -49,14 +50,10 @@ public class GroupController {
 
     // this function to affect profs to groups
 
-    @PostMapping("group/prof_groups/{groupId}")
-    public ResponseEntity<?> createGroupOfProfs(@PathVariable Integer groupId, @RequestBody Group profs) {
-        boolean success = groupService.createGroupWithProfs(groupId, profs);
-        if (success) {
-            return ResponseEntity.ok().body("Group created successfully with associated professors.");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create group or associate professors profs allredy in a groups.");
-        }
+    @PostMapping("/group/prof_groups/{groupId}")
+    public ResponseEntity<?> createGroupOfProfs(@PathVariable("groupId") Integer groupId, @RequestBody GroupDtoRequest groupDto) {
+        return groupService.createGroupWithProfs(groupId, groupDto);
     }
+
 
 }

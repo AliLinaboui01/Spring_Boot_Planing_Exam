@@ -37,8 +37,8 @@ public class ProfController {
     // after that we insert all in user
     @PostMapping("profs/new")
     @PreAuthorize("hasAuthority('admin:create')")
-    public void createProf(@RequestBody Prof profDetails) {
-       profService.createProf(profDetails);
+    public ResponseEntity<String> createProf(@RequestBody Prof profDetails) {
+     return  profService.createProf(profDetails);
 
     }
 
@@ -57,9 +57,8 @@ public class ProfController {
 
     @DeleteMapping("profs/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
-    public ResponseEntity<Void> deleteProf(@PathVariable Integer id) {
-        profService.deleteProf(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteProf(@PathVariable Integer id) {
+       return profService.deleteProf(id);
     }
 
 
