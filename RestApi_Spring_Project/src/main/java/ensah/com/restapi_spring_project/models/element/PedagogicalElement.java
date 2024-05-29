@@ -23,11 +23,11 @@ public class PedagogicalElement {
     private String title;
 
 
-    @ManyToOne
-    @JoinColumn(name = "prof_cord_id")
+    @ManyToOne(cascade = CascadeType.ALL )
+    @JoinColumn(name = "prof_cord_id" )
     private Prof prof_cord;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prof_ensg_id")
     private Prof prof_of_elem;
 
@@ -39,7 +39,7 @@ public class PedagogicalElement {
     @JoinColumn(name = "element_type_id")
     private ElementType elementType;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exam> exams;
 
 }

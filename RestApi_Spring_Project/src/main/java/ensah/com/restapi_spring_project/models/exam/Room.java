@@ -25,6 +25,6 @@ public class Room {
     private String name;
     private int capacity;
 
-    @OneToMany(mappedBy = "room" ,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room" ,fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     private List<Monitoring> monitoringListInRoom;
 }

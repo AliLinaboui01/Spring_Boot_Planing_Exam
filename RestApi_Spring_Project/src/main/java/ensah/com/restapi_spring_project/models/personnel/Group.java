@@ -26,7 +26,7 @@ public class Group {
 
     // les relations
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "group_prof",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "prof_id"))

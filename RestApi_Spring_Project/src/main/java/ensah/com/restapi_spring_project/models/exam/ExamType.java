@@ -22,6 +22,6 @@ public class ExamType {
 
 
 
-    @OneToMany(mappedBy = "examType")
+    @OneToMany(mappedBy = "examType" , cascade = CascadeType.ALL)
     private List<Exam> examList;
 }

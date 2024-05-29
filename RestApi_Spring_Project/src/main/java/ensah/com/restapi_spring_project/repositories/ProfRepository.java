@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProfRepository extends JpaRepository<Prof,Integer> {
+
 }

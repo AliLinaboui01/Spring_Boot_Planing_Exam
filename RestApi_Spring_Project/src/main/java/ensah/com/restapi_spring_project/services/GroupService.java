@@ -1,11 +1,14 @@
 package ensah.com.restapi_spring_project.services;
 
+import ensah.com.restapi_spring_project.Dto.Request.group.GroupDtoRequest;
 import ensah.com.restapi_spring_project.Dto.Responce.GroupDto;
 import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
 import ensah.com.restapi_spring_project.models.personnel.Group;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
 import ensah.com.restapi_spring_project.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +20,13 @@ public class GroupService {
 
 
     private final GroupRepository groupRepository ;
+    private final ProfService profService;
 
 
     @Autowired
-    public GroupService(GroupRepository groupRepository) {
+    public GroupService(GroupRepository groupRepository, ProfService profService) {
         this.groupRepository = groupRepository;
+        this.profService = profService;
     }
 
     public List<Group> getAllGroups() {
@@ -67,23 +72,39 @@ public class GroupService {
     }
 
 
+    // create group of profs
+    public ResponseEntity<String> createGroupWithProfs(Integer groupId, GroupDtoRequest groupDto) {
 
 
-    // ceate group of profs
-    public boolean createGroupWithProfs(Integer id, Group group) {
+        System.out.println("grp id " + groupId  +" and ids"+ groupDto.getProfIds());
         try {
-            Optional<Group> groupToUpdateOptional = groupRepository.findById(id);
-            Group groupToUpdate = groupToUpdateOptional.orElseThrow(() -> new RuntimeException("Group Not Found"));
+            Optional<Group> groupToUpdateOptional = groupRepository.findById(groupId);
 
-            groupToUpdate.setGroup_prof(group.getGroup_prof());
+            if (groupToUpdateOptional.isEmpty()) {
+                throw new RuntimeException("Group Not Found");
+            }
+
+            Group groupToUpdate = groupToUpdateOptional.get();
+
+            List<Prof> professors = profService.findProfessorsByIds(groupDto.getProfIds());
+
+            if (professors.isEmpty()) {
+                throw new RuntimeException("No professors found with the provided IDs.");
+            }
+
+            groupToUpdate.setGroup_prof(professors);
             groupRepository.save(groupToUpdate);
 
-            return true;
+            return ResponseEntity.ok().body("Group updated successfully with associated professors.");
         } catch (Exception e) {
             // Log the exception if necessary
-            return false;
+            e.printStackTrace(); // Add proper logging mechanism here
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update group or associate professors.");
         }
-}
+    }
+
+
+
 
 
 }

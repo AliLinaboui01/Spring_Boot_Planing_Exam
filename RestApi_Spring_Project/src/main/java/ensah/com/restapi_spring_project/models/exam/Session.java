@@ -24,6 +24,6 @@ public class Session {
     private String title;
 
 
-    @OneToMany(mappedBy = "session")
+    @OneToMany(mappedBy = "session" , cascade = CascadeType.ALL)
     private List<Exam> examList;
 }

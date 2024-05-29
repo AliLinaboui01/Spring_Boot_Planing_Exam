@@ -16,10 +16,9 @@ public class Prof {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
@@ -31,7 +30,7 @@ public class Prof {
     @JoinColumn(name = "field_id", nullable = true)
     private Field field;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "profs_monitoring",
             joinColumns = @JoinColumn(name = "prof_id"),
@@ -39,7 +38,6 @@ public class Prof {
     )
     private List<Monitoring> profsMonitoring;
 
-    @OneToMany(mappedBy = "profCoordinator", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "profCoordinator", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Monitoring> profCoordinatorMonitoring;
-
 }

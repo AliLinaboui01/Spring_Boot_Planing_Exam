@@ -30,14 +30,14 @@ public class Monitoring {
     private Exam exam;
 
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Prof> profs_supervised ;
 
-   @ManyToOne
+   @ManyToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "coordinateur_prf_id")
     private Prof profCoordinator;
 
-   @ManyToOne
+   @ManyToOne(cascade = CascadeType.ALL)
    @JoinColumn(name="admin-respo_id")
    private Admin adminMonitoring;
 }

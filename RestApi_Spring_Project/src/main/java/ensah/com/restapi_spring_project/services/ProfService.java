@@ -7,11 +7,17 @@ import ensah.com.restapi_spring_project.repositories.ProfRepository;
 import ensah.com.restapi_spring_project.security.user.Role;
 import ensah.com.restapi_spring_project.security.user.User;
 import ensah.com.restapi_spring_project.security.user.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,7 +66,7 @@ public class ProfService {
     // this function is to create prof with all atribute for example to have form
     // that have firstName , LastName , email ,Password , ...
     // and that affect auto in user table with the Prof role
-    public void createProf(Prof profDetails) {
+    public  ResponseEntity<String> createProf(Prof profDetails) {
         User user = new User();
         user.setFirstName(profDetails.getUser().getFirstName());
         user.setLastName(profDetails.getUser().getLastName());
@@ -68,19 +74,25 @@ public class ProfService {
         user.setPassword(passwordEncoder.encode(profDetails.getUser().getPassword()));
         user.setRole(Role.PROFESSOR);
 
-        // Save the User entity to the database
-        userRepository.save(user);
 
-        // Create a new Prof entity and associate it with the User entity
-        Prof prof = new Prof();
-        prof.setDepartment(profDetails.getDepartment());
-        prof.setField(profDetails.getField());
-        prof.setUser(user);
+        try  {
 
-        // Save the Prof entity to the database
-         profRepository.save(prof);
+            // Save the User entity to the database
+            userRepository.save(user);
+            // Create a new Prof entity and associate it with the User entity
+            Prof prof = new Prof();
+            prof.setDepartment(profDetails.getDepartment());
+            prof.setField(profDetails.getField());
+            prof.setUser(user);
 
+            // Save the Prof entity to the database
+            profRepository.save(prof);
 
+            return ResponseEntity.ok("Prof created sussfully with name"+ prof.getUser().getFirstName());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Faild to create Prof with thos infos check email : ");
+        }
     }
 
     public Prof updateProf(Integer id, Prof profDetails) {
@@ -114,8 +126,31 @@ public class ProfService {
         // Save the updated Prof entity
         return profRepository.save(prof);
     }
+    @Transactional
+    public ResponseEntity<String> deleteProf(Integer profId) {
+        try {
+            Optional<Prof> profOptional = profRepository.findById(profId);
+            if (profOptional.isPresent()) {
+                profRepository.delete(profOptional.get());
+                return ResponseEntity.ok("Prof deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Prof with id: " + profId + " not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete Prof with id: " + profId);
+        }
+    }
+    public List<Prof> findProfessorsByIds(List<Integer> professorIds) {
 
-    public void deleteProf(Integer id) {
-        profRepository.deleteById(id);
+
+        List<Prof> profs = new ArrayList<>();
+        for (Integer id:professorIds ) {
+            Prof prof = profRepository.findById(id).get();
+            profs.add(prof);
+        }
+        return profs;
     }
 }
+
