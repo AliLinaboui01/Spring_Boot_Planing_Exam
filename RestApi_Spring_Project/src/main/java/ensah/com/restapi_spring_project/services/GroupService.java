@@ -1,8 +1,12 @@
 package ensah.com.restapi_spring_project.services;
 
 import ensah.com.restapi_spring_project.Dto.Request.group.GroupDtoRequest;
-import ensah.com.restapi_spring_project.Dto.Responce.GroupDto;
-import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
+import ensah.com.restapi_spring_project.Dto.Responce.group.GroupDto;
+import ensah.com.restapi_spring_project.Dto.Responce.group.GroupResponse;
+import ensah.com.restapi_spring_project.Dto.Responce.prof.ProfDto;
+import ensah.com.restapi_spring_project.mappers.ExamMapper;
+import ensah.com.restapi_spring_project.mappers.GroupMapper;
+import ensah.com.restapi_spring_project.mappers.ProfessorMapper;
 import ensah.com.restapi_spring_project.models.personnel.Group;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
 import ensah.com.restapi_spring_project.repositories.GroupRepository;
@@ -29,9 +33,9 @@ public class GroupService {
         this.profService = profService;
     }
 
-    public List<Group> getAllGroups() {
-
-        return groupRepository.findAll();
+    public List<GroupResponse> getAllGroups() {
+        List<Group> groups =  groupRepository.findAll();
+        return groups.stream().map(GroupMapper::mapToGroupResponse).collect(Collectors.toList());
     }
 
     //this function to remove not used attributes DTO
@@ -70,20 +74,15 @@ public class GroupService {
     public void save(Group group) {
         groupRepository.save(group);
     }
-
-
     // create group of profs
     public ResponseEntity<String> createGroupWithProfs(Integer groupId, GroupDtoRequest groupDto) {
-
 
         System.out.println("grp id " + groupId  +" and ids"+ groupDto.getProfIds());
         try {
             Optional<Group> groupToUpdateOptional = groupRepository.findById(groupId);
-
             if (groupToUpdateOptional.isEmpty()) {
                 throw new RuntimeException("Group Not Found");
             }
-
             Group groupToUpdate = groupToUpdateOptional.get();
 
             List<Prof> professors = profService.findProfessorsByIds(groupDto.getProfIds());
@@ -91,7 +90,6 @@ public class GroupService {
             if (professors.isEmpty()) {
                 throw new RuntimeException("No professors found with the provided IDs.");
             }
-
             groupToUpdate.setGroup_prof(professors);
             groupRepository.save(groupToUpdate);
 
@@ -101,6 +99,22 @@ public class GroupService {
             e.printStackTrace(); // Add proper logging mechanism here
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update group or associate professors.");
         }
+    }
+
+    public List<ProfDto> getAllProfsByGroupId(Integer idGroup){
+        Group group = groupRepository.findById(idGroup)
+                .orElseThrow(() -> new IllegalArgumentException("group not found"));
+
+        return group.getGroup_prof().stream()
+                .map(ProfessorMapper::convertToDto)
+                .collect(Collectors.toList());
+    }
+    public List<Prof> getAllProfsByGroupIdForExam(Integer idGroup){
+        Group group = groupRepository.findById(idGroup)
+                .orElseThrow(() -> new IllegalArgumentException("group not found"));
+
+        return group.getGroup_prof();
+
     }
 
 

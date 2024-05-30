@@ -1,4 +1,4 @@
-package ensah.com.restapi_spring_project.Dto.Request;
+package ensah.com.restapi_spring_project.Dto.Request.elementP;
 
 
 import lombok.AllArgsConstructor;
@@ -17,6 +17,6 @@ public class PedagogicalElementRequestDto {
     private Integer prof_of_elem_id;
     private Integer  level_id;
     private Integer elementType_id;
-
+    private Integer fieldId;
 
 }

@@ -1,20 +1,13 @@
 package ensah.com.restapi_spring_project.services;
 
 
-import ensah.com.restapi_spring_project.Dto.Request.PedagogicalElementRequestDto;
-import ensah.com.restapi_spring_project.Dto.Responce.DepartementDto;
-import ensah.com.restapi_spring_project.Dto.Responce.PedagogicalElementDto;
-import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
-import ensah.com.restapi_spring_project.models.element.Department;
-import ensah.com.restapi_spring_project.models.element.ElementType;
-import ensah.com.restapi_spring_project.models.element.Level;
-import ensah.com.restapi_spring_project.models.element.PedagogicalElement;
+import ensah.com.restapi_spring_project.Dto.Request.elementP.PedagogicalElementRequestDto;
+import ensah.com.restapi_spring_project.Dto.Responce.pedagogicalElem.PedagogicalElementDto;
+import ensah.com.restapi_spring_project.Dto.Responce.prof.ProfDto;
+import ensah.com.restapi_spring_project.models.element.*;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
-import ensah.com.restapi_spring_project.repositories.ElementTypeRepository;
-import ensah.com.restapi_spring_project.repositories.LevelRepository;
-import ensah.com.restapi_spring_project.repositories.PedagogicalElementRepository;
-import ensah.com.restapi_spring_project.repositories.ProfRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import ensah.com.restapi_spring_project.repositories.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,19 +16,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PedagogicalElementService {
 
     private final PedagogicalElementRepository pedagogicalElementRepository;
     private final ProfRepository profRepository;
     private final LevelRepository levelRepository;
     private final ElementTypeRepository elementTypeRepository;
-@Autowired
-    public PedagogicalElementService(PedagogicalElementRepository pedagogicalElementRepository, ProfRepository profRepository, LevelRepository levelRepository, ElementTypeRepository elementTypeRepository) {
-        this.pedagogicalElementRepository = pedagogicalElementRepository;
-    this.profRepository = profRepository;
-    this.levelRepository = levelRepository;
-    this.elementTypeRepository = elementTypeRepository;
-}
+    private final FiledRepository fieldRepository;
 
     public List<PedagogicalElementDto> getAllPedagogicalElements() {
     return pedagogicalElementRepository.findAll().stream()
@@ -72,27 +60,33 @@ public class PedagogicalElementService {
                 .build();
     }
 
-    public ResponseEntity<String> save(PedagogicalElementRequestDto pedagogicalElementDto) {
+    public ResponseEntity<String> create(PedagogicalElementRequestDto pedagogicalElementDto) {
         try {
             // Fetch related entities
-            Prof profCord = profRepository.findById(pedagogicalElementDto.getProf_cord_id())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid prof_cord_id"));
             Prof profOfElem = profRepository.findById(pedagogicalElementDto.getProf_of_elem_id())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid prof_of_elem_id"));
             Level level = levelRepository.findById(pedagogicalElementDto.getLevel_id())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid level_id"));
             ElementType elementType = elementTypeRepository.findById(pedagogicalElementDto.getElementType_id())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid elementType_id"));
+            var field  = fieldRepository.findById(pedagogicalElementDto.getFieldId())
+                    .orElseThrow(()->new IllegalArgumentException("field not found"));
 
             // Build PedagogicalElement
             PedagogicalElement pedagogicalElement = PedagogicalElement.builder()
                     .title(pedagogicalElementDto.getTitle())
-                    .prof_cord(profCord)
                     .prof_of_elem(profOfElem)
                     .level(level)
                     .elementType(elementType)
+                    .field(field)
                     .build();
-
+            //check if the admin selct the cord of this elemnts
+            if(pedagogicalElementDto.getProf_cord_id() != null){
+                Prof profCord = profRepository.findById(pedagogicalElementDto.getProf_cord_id()).orElseThrow(() -> new IllegalArgumentException("Invalid prof_of_elem_id"));;
+                pedagogicalElement.setProf_cord(profCord);
+            }
+            // or the system will affect the prof of elemnt as a default s
+            pedagogicalElement.setProf_cord(profOfElem);
             // Save the PedagogicalElement
             pedagogicalElementRepository.save(pedagogicalElement);
             return ResponseEntity.ok("Pedagogical element created successfully");
@@ -109,4 +103,6 @@ public class PedagogicalElementService {
     public void remove(PedagogicalElement pedagogicalElement) {
     pedagogicalElementRepository.delete(pedagogicalElement);
     }
+
+
 }

@@ -1,11 +1,12 @@
 package ensah.com.restapi_spring_project.controllers.personnel;
 
 
-import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
+import ensah.com.restapi_spring_project.Dto.Request.proof.CreateRequest;
+import ensah.com.restapi_spring_project.Dto.Responce.prof.ProfDto;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
 import ensah.com.restapi_spring_project.services.ProfService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,48 +15,37 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/professor")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class ProfController {
 
     private final ProfService profService;
 
-    @Autowired
-    public ProfController(ProfService profService) {
-        this.profService = profService;
-    }
-
-
-    @GetMapping("/profs")
+    @GetMapping("/all")
     @PreAuthorize("hasAuthority('admin:read')")
     public List<ProfDto> getAllProfs() {
         return profService.getAllProfs();
     }
 
-
-    // this function is if we want to have register prof with all info firstname ... and
-    // after that we insert all in user
-    @PostMapping("profs/new")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String> createProf(@RequestBody Prof profDetails) {
-     return  profService.createProf(profDetails);
-
+    public ResponseEntity<ProfDto> createNewProf(CreateRequest prof) {
+        var profCreated = profService.createProfessor(prof);
+        if (profCreated != null){
+            return ResponseEntity.ok(profCreated);
+        }
+        return null;
     }
 
-    @PostMapping("/profs")
-    @PreAuthorize("hasAuthority('admin:create')")
-    public void createNewProf(Prof prof) {
-         profService.save(prof);
-    }
-
-    @PutMapping("profs/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
     public void updateProf(@PathVariable Integer id, @RequestBody Prof profDetails) {
         profService.updateProf(id, profDetails);
     }
 
 
-    @DeleteMapping("profs/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<String> deleteProf(@PathVariable Integer id) {
        return profService.deleteProf(id);

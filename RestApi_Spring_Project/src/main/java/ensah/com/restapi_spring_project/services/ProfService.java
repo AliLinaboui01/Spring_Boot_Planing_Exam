@@ -1,16 +1,16 @@
 package ensah.com.restapi_spring_project.services;
 
 
-import ensah.com.restapi_spring_project.Dto.Responce.ProfDto;
+import ensah.com.restapi_spring_project.Dto.Request.proof.CreateRequest;
+import ensah.com.restapi_spring_project.Dto.Responce.prof.ProfDto;
+import ensah.com.restapi_spring_project.mappers.ProfessorMapper;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
+import ensah.com.restapi_spring_project.repositories.FiledRepository;
 import ensah.com.restapi_spring_project.repositories.ProfRepository;
 import ensah.com.restapi_spring_project.security.user.Role;
 import ensah.com.restapi_spring_project.security.user.User;
 import ensah.com.restapi_spring_project.security.user.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,76 +23,54 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProfService {
-
 
     private final ProfRepository profRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
-    @Autowired
-    public ProfService(ProfRepository profRepository, PasswordEncoder passwordEncoder, UserRepository userRepository) {
-        this.profRepository = profRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-    }
-
+    private final FiledRepository filedRepository;
 
     public List<ProfDto> getAllProfs() {
         return profRepository.findAll().stream()
-                .map(this::mapToProfDto)
+                .map(ProfessorMapper::mapToProfDto)
                 .collect(Collectors.toList());
     }
 
-    private ProfDto mapToProfDto(Prof prof) {
 
-        return ProfDto.builder()
-                .id(prof.getUser().getId())
-                .firstName(prof.getUser().getFirstName())
-                .lastName(prof.getUser().getLastName())
-                .email(prof.getUser().getEmail())
-                .departement_name(prof.getDepartment().getName())
-                .field_name(prof.getField().getName())
+    public ProfDto createProfessor(CreateRequest createRequest){
+        var user = User.builder()
+                .firstName(createRequest.getFirstName())
+                .lastName(createRequest.getLastName())
+                .email(createRequest.getEmail())
+                .password(passwordEncoder.encode(createRequest.getPassword()))
+                .role(Role.PROFESSOR)
                 .build();
+        try  {
+            userRepository.save(user);
+            var field = filedRepository.findById(createRequest.getFieldId()).orElseThrow(() -> new IllegalArgumentException("field not found"));
+
+            Prof prof = new Prof();
+            prof.setField(field);
+            prof.setDepartment(field.getDepartment());
+            prof.setUser(user);
+            profRepository.save(prof);
+
+            return ProfessorMapper.mapToProfDto(prof);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<Prof> getAllProfsforExam() {
+        return profRepository.findAll();
     }
 
     public void save(Prof prof) {
         profRepository.save(prof);
     }
-
     public Optional<Prof> getProfById(Integer id) {
         return profRepository.findById(id);
-    }
-    // this function is to create prof with all atribute for example to have form
-    // that have firstName , LastName , email ,Password , ...
-    // and that affect auto in user table with the Prof role
-    public  ResponseEntity<String> createProf(Prof profDetails) {
-        User user = new User();
-        user.setFirstName(profDetails.getUser().getFirstName());
-        user.setLastName(profDetails.getUser().getLastName());
-        user.setEmail(profDetails.getUser().getEmail());
-        user.setPassword(passwordEncoder.encode(profDetails.getUser().getPassword()));
-        user.setRole(Role.PROFESSOR);
-
-
-        try  {
-
-            // Save the User entity to the database
-            userRepository.save(user);
-            // Create a new Prof entity and associate it with the User entity
-            Prof prof = new Prof();
-            prof.setDepartment(profDetails.getDepartment());
-            prof.setField(profDetails.getField());
-            prof.setUser(user);
-
-            // Save the Prof entity to the database
-            profRepository.save(prof);
-
-            return ResponseEntity.ok("Prof created sussfully with name"+ prof.getUser().getFirstName());
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Faild to create Prof with thos infos check email : ");
-        }
     }
 
     public Prof updateProf(Integer id, Prof profDetails) {
@@ -122,7 +100,6 @@ public class ProfService {
 
         // Save the updated user entity
         userRepository.save(user);
-
         // Save the updated Prof entity
         return profRepository.save(prof);
     }

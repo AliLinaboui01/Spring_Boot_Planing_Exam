@@ -1,9 +1,11 @@
 package ensah.com.restapi_spring_project.controllers.personnel;
 
 
+import ensah.com.restapi_spring_project.Dto.Responce.monitoring.MonitoringResponse;
 import ensah.com.restapi_spring_project.models.personnel.Monitoring;
 import ensah.com.restapi_spring_project.services.MonitoringService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +15,7 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/monitoring")
 @PreAuthorize("hasRole('ADMIN')")
 public class MonitoringController {
 
@@ -25,10 +27,9 @@ public class MonitoringController {
     }
 
 
-    @GetMapping("/monitorings")
+    @GetMapping("/all")
     @PreAuthorize("hasAuthority('admin:read')")
-    public List<Monitoring> getAllMonitorings() {
-
-        return monitoringService.getAllMonitorings();
+    public ResponseEntity<List<MonitoringResponse>> getAllMonitorings() {
+        return ResponseEntity.ok(monitoringService.getAllMonitorings());
     }
 }

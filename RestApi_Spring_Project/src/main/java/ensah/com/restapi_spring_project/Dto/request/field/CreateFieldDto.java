@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 public class CreateFieldDto {
 
     private String name;
+    private Integer departmentID;
+
 }

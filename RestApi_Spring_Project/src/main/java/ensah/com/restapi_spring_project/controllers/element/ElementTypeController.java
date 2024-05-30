@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/element-type")
 @PreAuthorize("hasRole('ADMIN')")
 public class ElementTypeController {
 
@@ -34,9 +34,9 @@ public class ElementTypeController {
     }
 
 
-    @PostMapping("/element_type")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String> createNewElemType() {
+    public ResponseEntity<String> createNewElemType(ElementType elementType) {
        return  null;
     }
 }

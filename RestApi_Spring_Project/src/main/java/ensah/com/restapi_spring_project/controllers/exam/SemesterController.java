@@ -1,6 +1,7 @@
 package ensah.com.restapi_spring_project.controllers.exam;
 
 
+import ensah.com.restapi_spring_project.Dto.Responce.semester.SemesterResponse;
 import ensah.com.restapi_spring_project.models.exam.Semester;
 import ensah.com.restapi_spring_project.services.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/semester")
 @PreAuthorize("hasRole('ADMIN')")
 public class SemesterController {
 
@@ -27,9 +28,9 @@ public class SemesterController {
 
 
 
-    @GetMapping("/semesters")
+    @GetMapping("/all")
     @PreAuthorize("hasAuthority('admin:read')")
-    public List<Semester> getAllSemesters() {
+    public List<SemesterResponse> getAllSemesters() {
         return semesterService.getAllSemester();
     }
 }

@@ -1,11 +1,10 @@
 package ensah.com.restapi_spring_project.controllers.element;
 
 
-import ensah.com.restapi_spring_project.Dto.Request.PedagogicalElementRequestDto;
-import ensah.com.restapi_spring_project.Dto.Responce.PedagogicalElementDto;
-import ensah.com.restapi_spring_project.models.element.PedagogicalElement;
+import ensah.com.restapi_spring_project.Dto.Request.elementP.PedagogicalElementRequestDto;
+import ensah.com.restapi_spring_project.Dto.Responce.pedagogicalElem.PedagogicalElementDto;
 import ensah.com.restapi_spring_project.services.PedagogicalElementService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,29 +13,25 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/pedagogiceElement")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class PedagogicalElementController {
 
     private final PedagogicalElementService pedagogicalElementService;
 
-    @Autowired
-    public PedagogicalElementController(PedagogicalElementService pedagogicalElementService) {
-        this.pedagogicalElementService = pedagogicalElementService;
-    }
 
-
-    @GetMapping("/element_pedacogics")
+    @GetMapping("/all")
     @PreAuthorize("hasAuthority('admin:read')")
     public List<PedagogicalElementDto> getAllPedagogicalElement() {
         return  pedagogicalElementService.getAllPedagogicalElements();
     }
 
 
-    @PostMapping("/element_pedacogics")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<String> createElementPedagogical(@RequestBody PedagogicalElementRequestDto pedagogicalElement) {
-         return pedagogicalElementService.save(pedagogicalElement);
+         return pedagogicalElementService.create(pedagogicalElement);
     }
 
 

@@ -30,13 +30,13 @@ public class Prof {
     @JoinColumn(name = "field_id", nullable = true)
     private Field field;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany
     @JoinTable(
-            name = "profs_monitoring",
+            name = "prof_monitoring",
             joinColumns = @JoinColumn(name = "prof_id"),
             inverseJoinColumns = @JoinColumn(name = "monitoring_id")
     )
-    private List<Monitoring> profsMonitoring;
+    private List<Monitoring> monitorings;
 
     @OneToMany(mappedBy = "profCoordinator", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Monitoring> profCoordinatorMonitoring;

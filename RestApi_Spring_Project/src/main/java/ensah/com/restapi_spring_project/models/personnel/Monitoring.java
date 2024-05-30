@@ -25,13 +25,13 @@ public class Monitoring {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "exam_id")
     private Exam exam;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Prof> profs_supervised ;
+    @ManyToMany(mappedBy = "monitorings")
+    private List<Prof> profs;
 
    @ManyToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "coordinateur_prf_id")

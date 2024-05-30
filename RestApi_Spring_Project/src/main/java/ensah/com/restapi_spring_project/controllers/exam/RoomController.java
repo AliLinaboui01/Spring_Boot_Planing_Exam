@@ -5,6 +5,7 @@ import ensah.com.restapi_spring_project.Dto.Responce.room.RoomResponse;
 import ensah.com.restapi_spring_project.Dto.Request.room.CreateRoomDto;
 import ensah.com.restapi_spring_project.models.exam.Room;
 import ensah.com.restapi_spring_project.services.RoomService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,23 +15,17 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin/room")
+@RequestMapping("/api/room")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class RoomController
 {
     private final RoomService roomService;
 
-  @Autowired
-    public RoomController(RoomService roomService) {
-        this.roomService = roomService;
-    }
-
-
-
     @GetMapping("/allRooms")
     @PreAuthorize("hasAuthority('admin:read')")
-    public List<Room> getAllRooms() {
-        return roomService.getAllRooms();
+    public ResponseEntity<List<RoomResponse>> getAllRooms() {
+        return ResponseEntity.ok(roomService.getAllRooms());
     }
 
     @PostMapping("/createRoom")
