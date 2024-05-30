@@ -39,7 +39,11 @@ public class PedagogicalElement {
     @JoinColumn(name = "element_type_id")
     private ElementType elementType;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pedagogicalElement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exam> exams;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "field_id")
+    private Field field;;
 
 }

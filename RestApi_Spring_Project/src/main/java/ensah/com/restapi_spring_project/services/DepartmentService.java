@@ -1,7 +1,9 @@
 package ensah.com.restapi_spring_project.services;
 
-import ensah.com.restapi_spring_project.Dto.Responce.DepartementDto;
+import ensah.com.restapi_spring_project.Dto.Responce.department.DepartementDto;
+import ensah.com.restapi_spring_project.Dto.Responce.field.FieldResponse;
 import ensah.com.restapi_spring_project.models.element.Department;
+import ensah.com.restapi_spring_project.models.element.Field;
 import ensah.com.restapi_spring_project.repositories.DepartementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +36,7 @@ public class DepartmentService {
                 .build();
     }
 
-    public ResponseEntity<String> save(Department department) {
+    public ResponseEntity<String> create(Department department) {
         if(department.getName()!= null) {
             departementRepository.save(department);
             return ResponseEntity.ok("Department created successfully");
@@ -46,7 +48,7 @@ public class DepartmentService {
 
     public ResponseEntity<String> removeDepartment(Integer id) {
         Optional<Department> departmentOptional = departementRepository.findById(id);
-        if (!departmentOptional.isPresent()) {
+        if (departmentOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Department not found with id: " + id);
         }
@@ -57,5 +59,20 @@ public class DepartmentService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to remove this Department with id: " + id);
         }
+    }
+    public List<FieldResponse> getAllFieldsByDepartmentId(Integer departmentId) {
+        Department department = departementRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+
+        return department.getFields().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private FieldResponse convertToDto(Field field) {
+        return FieldResponse.builder()
+                .name(field.getName())
+                .id(field.getId())
+                .build();
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/level")
 @PreAuthorize("hasRole('ADMIN')")
 public class LevelController {
 
@@ -26,14 +26,14 @@ public class LevelController {
     }
 
 
-    @GetMapping("/leveles")
+    @GetMapping("/levels")
     @PreAuthorize("hasAuthority('admin:read')")
     public List<Level> getAllLeveles() {
 
         return levelService.getAllLevels();
     }
 
-    @PostMapping("/leveles")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('admin:read')")
     public void createNewLevel(Level level) {
 

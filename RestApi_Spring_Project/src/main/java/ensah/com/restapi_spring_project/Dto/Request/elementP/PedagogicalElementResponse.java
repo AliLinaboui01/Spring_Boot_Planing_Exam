@@ -1,5 +1,4 @@
-package ensah.com.restapi_spring_project.Dto.Responce;
-
+package ensah.com.restapi_spring_project.Dto.Request.elementP;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FiledDto {
+public class PedagogicalElementResponse {
     private Integer id;
-
-    private String filed_name;
+    private String name;
+    private  Integer IdType;
+    private String nameType;
 }

@@ -1,4 +1,4 @@
-package ensah.com.restapi_spring_project.Dto.Responce;
+package ensah.com.restapi_spring_project.Dto.Responce.session;
 
 
 import lombok.AllArgsConstructor;
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepartementDto {
+public class SessionResponse {
 
-    private Integer id;
-    private String departement_name;
+    private String name;
+
 }

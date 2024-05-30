@@ -1,7 +1,8 @@
 package ensah.com.restapi_spring_project.controllers.element;
 
 
-import ensah.com.restapi_spring_project.Dto.Responce.DepartementDto;
+import ensah.com.restapi_spring_project.Dto.Responce.department.DepartementDto;
+import ensah.com.restapi_spring_project.Dto.Responce.field.FieldResponse;
 import ensah.com.restapi_spring_project.models.element.Department;
 import ensah.com.restapi_spring_project.services.DepartmentService;
 import jakarta.validation.Valid;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/department")
 @PreAuthorize("hasRole('ADMIN')")
 public class DepartementController {
     private final DepartmentService departementService;
@@ -31,10 +32,10 @@ public class DepartementController {
     }
 
 
-    @PostMapping("/departements")
+    @PostMapping("/create")
     @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<String>  createNewDepartment(@Valid @RequestBody Department department) {
-        return departementService.save(department);
+        return departementService.create(department);
     }
 
 
@@ -44,6 +45,12 @@ public class DepartementController {
        return departementService.removeDepartment(id);
     }
 
+    @GetMapping("/{idDept}/fields")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public ResponseEntity<List<FieldResponse>> getAllFieldsByIdDept(@PathVariable Integer idDept){
+        List<FieldResponse> fieldList = departementService.getAllFieldsByDepartmentId(idDept);
+        return ResponseEntity.ok(fieldList);
+    }
 
 
 }

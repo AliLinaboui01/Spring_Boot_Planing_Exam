@@ -1,4 +1,4 @@
-package ensah.com.restapi_spring_project.Dto.Responce;
+package ensah.com.restapi_spring_project.Dto.Responce.department;
 
 
 import lombok.AllArgsConstructor;
@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SessionDto {
-    //this just to ignor error run i will modify dto
+public class DepartementDto {
+
     private Integer id;
-    private String name;
-    private int capacity;
+    private String departement_name;
 }

@@ -1,8 +1,10 @@
 package ensah.com.restapi_spring_project.controllers.exam;
 
 
+import ensah.com.restapi_spring_project.Dto.Responce.session.SessionResponse;
 import ensah.com.restapi_spring_project.models.exam.Session;
 import ensah.com.restapi_spring_project.services.SessionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,22 +15,17 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/session")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class SessionController {
 
     private  final SessionService sessionService;
 
 
-    @Autowired
-    public SessionController(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
-
-
-    @GetMapping("/sessions")
+    @GetMapping("/all")
     @PreAuthorize("hasAuthority('admin:read')")
-    public List<Session> getAllSessions() {
+    public List<SessionResponse> getAllSessions() {
         return sessionService.getAllSession();
     }
 }

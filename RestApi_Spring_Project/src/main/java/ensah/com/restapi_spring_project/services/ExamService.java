@@ -1,88 +1,198 @@
 package ensah.com.restapi_spring_project.services;
 
 
-import ensah.com.restapi_spring_project.models.exam.Exam;
+import ensah.com.restapi_spring_project.Dto.Request.exam.CreateExamDto;
+import ensah.com.restapi_spring_project.Dto.Responce.exam.ExamResponse;
+import ensah.com.restapi_spring_project.Dto.Responce.monitoring.MonitoringDto;
+import ensah.com.restapi_spring_project.mappers.ExamMapper;
+import ensah.com.restapi_spring_project.models.element.PedagogicalElement;
+import ensah.com.restapi_spring_project.models.exam.*;
+import ensah.com.restapi_spring_project.models.personnel.Admin;
 import ensah.com.restapi_spring_project.models.personnel.Monitoring;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
-import ensah.com.restapi_spring_project.repositories.ExamRepository;
-import ensah.com.restapi_spring_project.repositories.MonitoringRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import ensah.com.restapi_spring_project.repositories.*;
+import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ExamService {
 
     private final ExamRepository examRepository;
     private final MonitoringRepository monitoringRepository;
-
-    @Autowired
-    public ExamService(ExamRepository examRepository, MonitoringRepository monitoringRepository) {
-        this.examRepository = examRepository;
-        this.monitoringRepository = monitoringRepository;
+    private final SemesterRepository semesterRepository;
+    private final ExamTypeRepository examTypeRepository;
+    private final SessionRepository sessionRepository;
+    private final PedagogicalElementRepository pedagogicalElementRepository;
+    private final RoomRepository roomRepository;
+    private final ProfRepository profRepository;
+    private final AdminRepository adminRepository;
+    private final GroupService groupService;
+    private final ProfService profService;
+    private final AdminService adminService;
+    private final MonitoringService monitoringService;
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+    public List<ExamResponse> getAllExams() {
+        List<Exam> exams = examRepository.findAll();
+        return exams.stream().map(ExamMapper::mapToExamResponse).collect(Collectors.toList());
     }
-
-    public List<Exam> getAllExams() {
-        return examRepository.findAll();
-    }
-
-
 
     @Transactional
-    public boolean createExam(Exam exam) {
-        if (isConflictWithExistingExams(exam)) {
-            return false; // Conflict detected
+    public ExamResponse createExam(CreateExamDto examDto) throws IOException {
+        var exam = Exam.builder()
+                .start_date(examDto.getStartDate())
+                .exactTime(examDto.getExactTime())
+                .defaultTime(examDto.getDefaultTime())
+                .year(Year.parse(examDto.getYear()))
+                .rapport(examDto.getRapport())
+                .build();
+
+        if (examDto.getSessionId() != null) {
+            Session session = sessionRepository.findById(examDto.getSessionId())
+                    .orElseThrow(() -> new RuntimeException("Session not found"));
+            exam.setSession(session);
         }
 
-        // Check for conflicts with Monitoring entries
-        if (isConflictWithMonitoring(exam.getListExamMonitoring())) {
-            return false; // Conflict detected
+        var startDate = examDto.getStartDate();
+        LocalDate localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int month = localStartDate.getMonthValue();
+        if (month >= 9 || month <= 2) {
+            var semester = semesterRepository.findByTitle("spring");
+            exam.setSemester(semester);
+        } else {
+            var semester = semesterRepository.findByTitle("autumn");
+            exam.setSemester(semester);
         }
 
-        examRepository.save(exam);
-        return true;
-    }
+        if (examDto.getExamTypeId() != null) {
+            ExamType examType = examTypeRepository.findById(examDto.getExamTypeId())
+                    .orElseThrow(() -> new RuntimeException("ExamType not found"));
+            exam.setExamType(examType);
+        }
 
-    private boolean isConflictWithExistingExams(Exam newExam) {
-        List<Exam> overlappingExams = examRepository.findOverlappingExams(newExam.getStart_date(), newExam.getEnd_date());
+        if (examDto.getPedagogicalElementId() != null) {
+            PedagogicalElement pedagogicalElement = pedagogicalElementRepository.findById(examDto.getPedagogicalElementId())
+                    .orElseThrow(() -> new RuntimeException("PedagogicalElement not found"));
+            LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+            LocalDateTime endDateTime;
+            System.out.println("Type of this element: " + pedagogicalElement.getTitle());
+            if (pedagogicalElement.getElementType().getTitle().equals("Module")) {
+                endDateTime = startDateTime.plusHours(2);
+            } else {
+                endDateTime = startDateTime.plusHours(1).plusMinutes(30);
+            }
+            Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            exam.setEnd_date(endDate);
+            exam.setPedagogicalElement(pedagogicalElement);
+        }
 
-        for (Exam exam : overlappingExams) {
-            for (Monitoring newMonitoring : newExam.getListExamMonitoring()) {
-                for (Monitoring existingMonitoring : exam.getListExamMonitoring()) {
-                    if (isConflictWithMonitoring(newMonitoring, existingMonitoring)) {
-                        return true; // Conflict detected
+        List<Room> occupiedRooms = roomRepository.findOccupiedRooms(examDto.getStartDate(), exam.getEnd_date());
+        List<Prof> occupiedProfs = profRepository.findOccupiedProfs(examDto.getStartDate(), exam.getEnd_date());
+        List<Admin> occupiedAdmins = adminRepository.findOccupiedAdmins(examDto.getStartDate(), exam.getEnd_date());
+
+        Random random = new Random();
+
+        // Select one random available coordinator prof
+        List<Prof> allProfs = profService.getAllProfsforExam();
+        List<Prof> availableProfs = new ArrayList<>();
+        for (Prof prof : allProfs) {
+            if (!occupiedProfs.contains(prof)) {
+                availableProfs.add(prof);
+            }
+        }
+        if (availableProfs.isEmpty()) {
+            throw new RuntimeException("No available professor to assign as coordinator.");
+        }
+        Prof randomProfCoordinator = availableProfs.get(random.nextInt(availableProfs.size()));
+
+        // Select one random available admin
+        List<Admin> allAdmins = adminService.getAll();
+        List<Admin> availableAdmins = new ArrayList<>();
+        for (Admin admin : allAdmins) {
+            if (!occupiedAdmins.contains(admin)) {
+                availableAdmins.add(admin);
+            }
+        }
+        if (availableAdmins.isEmpty()) {
+            throw new RuntimeException("No available admin to assign for monitoring.");
+        }
+        Admin randomAdminMonitoring = availableAdmins.get(random.nextInt(availableAdmins.size()));
+
+        List<Monitoring> buildListMonitoring = new ArrayList<>();
+
+        for (MonitoringDto monitoringDto : examDto.getMonitoringList()) {
+            Room room = roomRepository.findById(monitoringDto.getRoomId())
+                    .orElseThrow(() -> new RuntimeException("Room not found"));
+            if (occupiedRooms.contains(room)) {
+                throw new RuntimeException("Room " + room.getName() + " is not available during the selected time.");
+            }
+
+            List<Prof> profs = groupService.getAllProfsByGroupIdForExam(monitoringDto.getGroupId());
+            List<Prof> listOfProf = new ArrayList<>();
+
+            for (Prof prof : profs) {
+                if (!occupiedProfs.contains(prof)) {
+                    listOfProf.add(prof);
+                    if (listOfProf.size() == monitoringDto.getProfNumber()) {
+                        break;
                     }
                 }
             }
-        }
-        return false; // No conflict
-    }
 
-    private boolean isConflictWithMonitoring(List<Monitoring> newMonitorings) {
-        for (int i = 0; i < newMonitorings.size(); i++) {
-            for (int j = i + 1; j < newMonitorings.size(); j++) {
-                Monitoring newMonitoring1 = newMonitorings.get(i);
-                Monitoring newMonitoring2 = newMonitorings.get(j);
-                if (isConflictWithMonitoring(newMonitoring1, newMonitoring2)) {
-                    return true; // Conflict detected
-                }
+            if (listOfProf.size() < monitoringDto.getProfNumber()) {
+                throw new RuntimeException("Not enough available professors for the group " + monitoringDto.getGroupId());
             }
+
+            Monitoring monitoring = new Monitoring();
+            monitoring.setRoom(room);
+            monitoring.setProfs(listOfProf);
+            monitoring.setProfCoordinator(randomProfCoordinator);
+            monitoring.setAdminMonitoring(randomAdminMonitoring);
+            monitoring.setExam(exam);
+            monitoringService.save(monitoring);
+            buildListMonitoring.add(monitoring);
         }
-        return false; // No conflict
+        exam.setListExamMonitoring(buildListMonitoring);
+        examRepository.save(exam);
+
+        return ExamResponse.builder()
+                .defaultTime(exam.getDefaultTime())
+                .year(examDto.getYear())
+                .startDate(exam.getStart_date())
+                .endDate(exam.getEnd_date())
+                .exactTime(exam.getExactTime())
+                .build();
     }
 
-    private boolean isConflictWithMonitoring(Monitoring newMonitoring, Monitoring existingMonitoring) {
-        for (Prof newProf : newMonitoring.getProfs_supervised()) {
-            for (Prof existingProf : existingMonitoring.getProfs_supervised()) {
-                if (newProf.getId().equals(existingProf.getId())) {
-                    return true; // Conflict detected
-                }
-            }
+    private String storeFile(MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            Path copyLocation = Paths.get(uploadDir + file.getOriginalFilename());
+            Files.copy(file.getInputStream(), copyLocation);
+            return copyLocation.toString();
         }
-        return false; // No conflict
+        return null;
     }
-
 
 }
+
+
+
+
+
+

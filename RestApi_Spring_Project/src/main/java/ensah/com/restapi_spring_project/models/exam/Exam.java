@@ -34,8 +34,6 @@ public class Exam {
     private String pv;
     private String rapport;
 
-
-
     @OneToMany(mappedBy = "exam" , cascade = CascadeType.ALL)
     private List<Monitoring> ListExamMonitoring;
 
@@ -52,7 +50,7 @@ public class Exam {
     @JoinColumn(name="semester_id")
     private Semester semester;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "pedagogical_elem_id")
     private PedagogicalElement pedagogicalElement;
 }

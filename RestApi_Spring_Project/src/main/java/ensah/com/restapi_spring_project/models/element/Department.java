@@ -1,5 +1,6 @@
 package ensah.com.restapi_spring_project.models.element;
 
+import ensah.com.restapi_spring_project.models.exam.Exam;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -28,4 +29,9 @@ public class Department {
 
     @OneToMany(mappedBy = "department" ,fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Prof> profs;
+
+    @OneToMany(mappedBy = "department" ,fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Field> fields;
+
+
 }
