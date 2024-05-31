@@ -6,7 +6,7 @@ import ensah.com.restapi_spring_project.models.personnel.Prof;
 public class ProfessorMapper {
     public static ProfDto mapToProfDto(Prof prof) {
         ProfDto.ProfDtoBuilder builder = ProfDto.builder()
-                .id(prof.getId())
+                .id(prof.getUser().getId())
                 .firstName(prof.getUser().getFirstName())
                 .lastName(prof.getUser().getLastName())
                 .email(prof.getUser().getEmail());
