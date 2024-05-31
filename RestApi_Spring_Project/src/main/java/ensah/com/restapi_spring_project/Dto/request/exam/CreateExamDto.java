@@ -14,11 +14,7 @@ import java.util.List;
 @Builder
 public class CreateExamDto {
     private Date startDate;
-    private Date endDate;
-    private int exactTime;
-    private int defaultTime;
     private String year;
-
     private List<MonitoringDto> monitoringList;
     private Integer sessionId;
     private Integer examTypeId;
