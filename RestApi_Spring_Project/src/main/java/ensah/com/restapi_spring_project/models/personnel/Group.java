@@ -1,12 +1,10 @@
 package ensah.com.restapi_spring_project.models.personnel;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data
@@ -22,15 +20,8 @@ public class Group {
     private Integer id;
     private String group_name;
 
-
-    // les relations
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "group_prof",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "prof_id"))
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "group"
+    )
     private List<Prof> group_prof;
-
-
-
 }

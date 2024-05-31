@@ -75,29 +75,22 @@ public class GroupService {
         groupRepository.save(group);
     }
     // create group of profs
-    public ResponseEntity<String> createGroupWithProfs(Integer groupId, GroupDtoRequest groupDto) {
-
-        System.out.println("grp id " + groupId  +" and ids"+ groupDto.getProfIds());
+    public ResponseEntity<String> createGroupWithProfs(GroupDtoRequest groupDto) {
         try {
-            Optional<Group> groupToUpdateOptional = groupRepository.findById(groupId);
-            if (groupToUpdateOptional.isEmpty()) {
-                throw new RuntimeException("Group Not Found");
-            }
-            Group groupToUpdate = groupToUpdateOptional.get();
-
+            Group group = Group.builder()
+                    .group_name(groupDto.getName())
+                    .build();
             List<Prof> professors = profService.findProfessorsByIds(groupDto.getProfIds());
-
             if (professors.isEmpty()) {
                 throw new RuntimeException("No professors found with the provided IDs.");
             }
-            groupToUpdate.setGroup_prof(professors);
-            groupRepository.save(groupToUpdate);
-
-            return ResponseEntity.ok().body("Group updated successfully with associated professors.");
+            group.setGroup_prof(professors);
+            groupRepository.save(group);
+            return ResponseEntity.ok().body("Group created successfully with associated professors.");
         } catch (Exception e) {
             // Log the exception if necessary
             e.printStackTrace(); // Add proper logging mechanism here
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update group or associate professors.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create group or associate professors.");
         }
     }
 

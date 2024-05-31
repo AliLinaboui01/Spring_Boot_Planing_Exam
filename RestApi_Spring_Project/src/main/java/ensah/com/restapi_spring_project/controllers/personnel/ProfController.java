@@ -2,6 +2,7 @@ package ensah.com.restapi_spring_project.controllers.personnel;
 
 
 import ensah.com.restapi_spring_project.Dto.Request.proof.CreateRequest;
+import ensah.com.restapi_spring_project.Dto.Request.proof.UpdateRequest;
 import ensah.com.restapi_spring_project.Dto.Responce.prof.ProfDto;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
 import ensah.com.restapi_spring_project.services.ProfService;
@@ -30,20 +31,13 @@ public class ProfController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<ProfDto> createNewProf(CreateRequest prof) {
+    public ResponseEntity<ProfDto> createNewProf(@RequestBody CreateRequest prof) {
         var profCreated = profService.createProfessor(prof);
         if (profCreated != null){
             return ResponseEntity.ok(profCreated);
         }
         return null;
     }
-
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('admin:update')")
-    public void updateProf(@PathVariable Integer id, @RequestBody Prof profDetails) {
-        profService.updateProf(id, profDetails);
-    }
-
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")

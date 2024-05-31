@@ -23,6 +23,7 @@ public class MonitoringService {
         return monitorings.stream().map(this::mapToMonitoringResponse).collect(Collectors.toList());
     }
 
+
     public MonitoringResponse mapToMonitoringResponse(Monitoring monitoring){
         return MonitoringResponse.builder()
                 .coordinator(monitoring.getProfCoordinator().getUser().getFirstName() + " " +monitoring.getProfCoordinator().getUser().getLastName() )

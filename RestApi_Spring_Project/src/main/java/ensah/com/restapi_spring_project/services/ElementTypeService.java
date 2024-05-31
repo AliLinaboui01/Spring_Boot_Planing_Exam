@@ -19,7 +19,6 @@ public class ElementTypeService {
         this.elementTypeRepository = elementTypeRepository;
     }
 
-
     public List<ElementType> getAllElementType() {
         return elementTypeRepository.findAll();
     }

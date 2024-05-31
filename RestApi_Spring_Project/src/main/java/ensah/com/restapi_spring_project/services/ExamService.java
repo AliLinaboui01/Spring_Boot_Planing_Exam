@@ -3,7 +3,7 @@ package ensah.com.restapi_spring_project.services;
 
 import ensah.com.restapi_spring_project.Dto.Request.exam.CreateExamDto;
 import ensah.com.restapi_spring_project.Dto.Responce.exam.ExamResponse;
-import ensah.com.restapi_spring_project.Dto.Responce.monitoring.MonitoringDto;
+import ensah.com.restapi_spring_project.Dto.Request.monitoring.MonitoringDto;
 import ensah.com.restapi_spring_project.mappers.ExamMapper;
 import ensah.com.restapi_spring_project.models.element.PedagogicalElement;
 import ensah.com.restapi_spring_project.models.exam.*;
@@ -55,12 +55,12 @@ public class ExamService {
 
     @Transactional
     public ExamResponse createExam(CreateExamDto examDto) throws IOException {
+
         var exam = Exam.builder()
                 .start_date(examDto.getStartDate())
                 .exactTime(examDto.getExactTime())
                 .defaultTime(examDto.getDefaultTime())
                 .year(Year.parse(examDto.getYear()))
-                .rapport(examDto.getRapport())
                 .build();
 
         if (examDto.getSessionId() != null) {
@@ -100,8 +100,18 @@ public class ExamService {
             Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
             exam.setEnd_date(endDate);
             exam.setPedagogicalElement(pedagogicalElement);
+            // Check for element clash
+            List<Exam> elementClashExams = examRepository.findByPedagogicalElementIdAndDateRange(
+                    examDto.getPedagogicalElementId(), examDto.getStartDate(), exam.getEnd_date());
+            if (!elementClashExams.isEmpty()) {
+                throw new RuntimeException("An exam with the same pedagogical element already exists in the given date range.");
+            }
         }
-
+        // Check for date clash
+        List<Exam> dateClashExams = examRepository.findOverlappingExams(examDto.getStartDate(), exam.getEnd_date());
+        if (!dateClashExams.isEmpty()) {
+            throw new RuntimeException("An exam already exists in the given date range.");
+        }
         List<Room> occupiedRooms = roomRepository.findOccupiedRooms(examDto.getStartDate(), exam.getEnd_date());
         List<Prof> occupiedProfs = profRepository.findOccupiedProfs(examDto.getStartDate(), exam.getEnd_date());
         List<Admin> occupiedAdmins = adminRepository.findOccupiedAdmins(examDto.getStartDate(), exam.getEnd_date());
@@ -154,7 +164,6 @@ public class ExamService {
                     }
                 }
             }
-
             if (listOfProf.size() < monitoringDto.getProfNumber()) {
                 throw new RuntimeException("Not enough available professors for the group " + monitoringDto.getGroupId());
             }
@@ -174,7 +183,7 @@ public class ExamService {
         return ExamResponse.builder()
                 .defaultTime(exam.getDefaultTime())
                 .year(examDto.getYear())
-                .startDate(exam.getStart_date())
+                .startDate(exam.getStart_date() )
                 .endDate(exam.getEnd_date())
                 .exactTime(exam.getExactTime())
                 .build();

@@ -10,8 +10,6 @@ import java.util.List;
 @Service
 public class LevelService {
     private final LevelRepository levelRepository;
-
-
     @Autowired
     public LevelService(LevelRepository levelRepository) {
         this.levelRepository = levelRepository;
@@ -21,8 +19,6 @@ public class LevelService {
 
         return  levelRepository.findAll();
     }
-
-
     public void save(Level level) {
         levelRepository.save(level);
     }

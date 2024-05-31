@@ -23,7 +23,6 @@ public class ExamTypeService {
         return examType.stream().map(ExamTypeMapper::mapToExamResponse).collect(Collectors.toList());
     }
 
-
     public void save(ExamType examType) {
         examTypeRepository.save(examType);
     }

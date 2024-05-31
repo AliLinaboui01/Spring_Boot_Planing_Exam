@@ -1,4 +1,4 @@
-package ensah.com.restapi_spring_project.Dto.Responce.monitoring;
+package ensah.com.restapi_spring_project.Dto.Request.monitoring;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,10 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MonitoringDto {
+
     private Integer roomId;
-    private List<Integer> profIds;
-    private Integer coordinatorId;
-    private Integer adminId;
     private Integer groupId;
     private Integer profNumber;
 }

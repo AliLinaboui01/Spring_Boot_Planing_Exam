@@ -23,6 +23,8 @@ public class Prof {
     private User user;
 
     @ManyToOne
+    private Group group;
+    @ManyToOne
     @JoinColumn(name = "department_id", nullable = true)
     private Department department;
 
