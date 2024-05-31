@@ -2,6 +2,7 @@ package ensah.com.restapi_spring_project.services;
 
 
 import ensah.com.restapi_spring_project.Dto.Request.exam.CreateExamDto;
+import ensah.com.restapi_spring_project.Dto.Request.exam.UpdateExam;
 import ensah.com.restapi_spring_project.Dto.Responce.exam.ExamResponse;
 import ensah.com.restapi_spring_project.Dto.Request.monitoring.MonitoringDto;
 import ensah.com.restapi_spring_project.mappers.ExamMapper;
@@ -201,6 +202,144 @@ public class ExamService {
         }
         return null;
     }
+
+    public ExamResponse update(UpdateExam updateExamRequest, MultipartFile examTest, MultipartFile pv) throws IOException {
+        Exam exam = getById(updateExamRequest.getId());
+        exam.setExam_test(storeFile(examTest));
+        exam.setPv(storeFile(pv));
+        exam.setYear(Year.parse(updateExamRequest.getYear()));
+        exam.setRapport(updateExamRequest.getRapport());
+        if (updateExamRequest.getSessionId() != null) {
+            Session session = sessionRepository.findById(updateExamRequest.getSessionId())
+                    .orElseThrow(() -> new RuntimeException("Session not found"));
+            exam.setSession(session);
+        }
+        var startDate = updateExamRequest.getStartDate();
+        LocalDate localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int month = localStartDate.getMonthValue();
+        if (month >= 9 || month <= 2) {
+            var semester = semesterRepository.findByTitle("spring");
+            exam.setSemester(semester);
+        } else {
+            var semester = semesterRepository.findByTitle("autumn");
+            exam.setSemester(semester);
+        }
+
+        if (updateExamRequest.getExamTypeId() != null) {
+            ExamType examType = examTypeRepository.findById(updateExamRequest.getExamTypeId())
+                    .orElseThrow(() -> new RuntimeException("ExamType not found"));
+            exam.setExamType(examType);
+        }
+
+        if (updateExamRequest.getPedagogicalElementId() != null) {
+            PedagogicalElement pedagogicalElement = pedagogicalElementRepository.findById(updateExamRequest.getPedagogicalElementId())
+                    .orElseThrow(() -> new RuntimeException("PedagogicalElement not found"));
+            LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+            LocalDateTime endDateTime;
+            System.out.println("Type of this element: " + pedagogicalElement.getTitle());
+            if (pedagogicalElement.getElementType().getTitle().equals("Module")) {
+                exam.setDefaultTime(120);
+                endDateTime = startDateTime.plusHours(2);
+            } else {
+                exam.setDefaultTime(90);
+                endDateTime = startDateTime.plusHours(1).plusMinutes(30);
+            }
+            Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            exam.setEnd_date(endDate);
+            exam.setPedagogicalElement(pedagogicalElement);
+            // Check for element clash
+            List<Exam> elementClashExams = examRepository.findByPedagogicalElementIdAndDateRange(
+                    updateExamRequest.getPedagogicalElementId(), updateExamRequest.getStartDate(), exam.getEnd_date());
+            if (!elementClashExams.isEmpty()) {
+                throw new RuntimeException("An exam with the same pedagogical element already exists in the given date range.");
+            }
+        }
+        // Check for date clash
+        List<Exam> dateClashExams = examRepository.findOverlappingExams(updateExamRequest.getStartDate(), exam.getEnd_date());
+        if (!dateClashExams.isEmpty()) {
+            throw new RuntimeException("An exam already exists in the given date range.");
+        }
+        List<Room> occupiedRooms = roomRepository.findOccupiedRooms(updateExamRequest.getStartDate(), exam.getEnd_date());
+        List<Prof> occupiedProfs = profRepository.findOccupiedProfs(updateExamRequest.getStartDate(), exam.getEnd_date());
+        List<Admin> occupiedAdmins = adminRepository.findOccupiedAdmins(updateExamRequest.getStartDate(), exam.getEnd_date());
+
+        Random random = new Random();
+
+        // Select one random available coordinator prof
+        List<Prof> allProfs = profService.getAllProfsforExam();
+        List<Prof> availableProfs = new ArrayList<>();
+        for (Prof prof : allProfs) {
+            if (!occupiedProfs.contains(prof)) {
+                availableProfs.add(prof);
+            }
+        }
+        if (availableProfs.isEmpty()) {
+            throw new RuntimeException("No available professor to assign as coordinator.");
+        }
+        Prof randomProfCoordinator = availableProfs.get(random.nextInt(availableProfs.size()));
+
+        // Select one random available admin
+        List<Admin> allAdmins = adminService.getAll();
+        List<Admin> availableAdmins = new ArrayList<>();
+        for (Admin admin : allAdmins) {
+            if (!occupiedAdmins.contains(admin)) {
+                availableAdmins.add(admin);
+            }
+        }
+        if (availableAdmins.isEmpty()) {
+            throw new RuntimeException("No available admin to assign for monitoring.");
+        }
+        Admin randomAdminMonitoring = availableAdmins.get(random.nextInt(availableAdmins.size()));
+
+        List<Monitoring> buildListMonitoring = new ArrayList<>();
+
+        for (MonitoringDto monitoringDto : updateExamRequest.getMonitoringList()) {
+            Room room = roomRepository.findById(monitoringDto.getRoomId())
+                    .orElseThrow(() -> new RuntimeException("Room not found"));
+            if (occupiedRooms.contains(room)) {
+                throw new RuntimeException("Room " + room.getName() + " is not available during the selected time.");
+            }
+
+            List<Prof> profs = groupService.getAllProfsByGroupIdForExam(monitoringDto.getGroupId());
+            List<Prof> listOfProf = new ArrayList<>();
+
+            for (Prof prof : profs) {
+                if (!occupiedProfs.contains(prof)) {
+                    listOfProf.add(prof);
+                    // Set the group reference in Prof
+                    prof.setGroup(prof.getGroup());
+                    profRepository.save(prof);
+                    if (listOfProf.size() == monitoringDto.getProfNumber()) {
+                        break;
+                    }
+                }
+            }
+            if (listOfProf.size() < monitoringDto.getProfNumber()) {
+                throw new RuntimeException("Not enough available professors for the group " + monitoringDto.getGroupId());
+            }
+
+            Monitoring monitoring = new Monitoring();
+            monitoring.setRoom(room);
+            monitoring.setProfs(listOfProf);
+            monitoring.setProfCoordinator(randomProfCoordinator);
+            monitoring.setAdminMonitoring(randomAdminMonitoring);
+            monitoring.setExam(exam);
+            monitoringService.save(monitoring);
+            buildListMonitoring.add(monitoring);
+        }
+        exam.setListExamMonitoring(buildListMonitoring);
+        examRepository.save(exam);
+
+        return ExamMapper.mapToExamResponse(exam);
+
+
+    }
+
+    public Exam getById(Integer id){
+        return examRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("exam not found"));
+    }
+
+
 
 }
 

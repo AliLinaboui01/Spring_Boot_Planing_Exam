@@ -19,4 +19,5 @@ public interface ProfRepository extends JpaRepository<Prof,Integer> {
 
 
     public Prof findByUser(User user);
+
 }

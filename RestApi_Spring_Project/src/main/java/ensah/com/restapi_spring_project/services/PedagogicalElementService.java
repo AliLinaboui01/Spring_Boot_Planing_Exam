@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +60,7 @@ public class PedagogicalElementService {
                 .build();
     }
 
+    @Transactional
     public ResponseEntity<String> create(PedagogicalElementRequestDto pedagogicalElementDto) {
         try {
             // Fetch related entities
@@ -84,6 +86,9 @@ public class PedagogicalElementService {
                 Prof profCord = profRepository.findById(pedagogicalElementDto.getProf_cord_id()).orElseThrow(() -> new IllegalArgumentException("Invalid prof_of_elem_id"));;
                 pedagogicalElement.setProf_cord(profCord);
             }
+            profOfElem.setField(field);
+            profOfElem.setDepartment(field.getDepartment());
+            profRepository.save(profOfElem);
             // or the system will affect the prof of elemnt as a default s
             pedagogicalElement.setProf_cord(profOfElem);
             // Save the PedagogicalElement

@@ -2,7 +2,9 @@ package ensah.com.restapi_spring_project.controllers.exam;
 
 
 import ensah.com.restapi_spring_project.Dto.Request.exam.CreateExamDto;
+import ensah.com.restapi_spring_project.Dto.Request.exam.UpdateExam;
 import ensah.com.restapi_spring_project.Dto.Responce.exam.ExamResponse;
+import ensah.com.restapi_spring_project.mappers.ExamMapper;
 import ensah.com.restapi_spring_project.models.exam.Exam;
 import ensah.com.restapi_spring_project.repositories.AdminRepository;
 import ensah.com.restapi_spring_project.services.ExamService;
@@ -47,6 +49,14 @@ public class ExamController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    @PutMapping ("/update")
+    public ResponseEntity<ExamResponse> update(@RequestBody UpdateExam updateExam, MultipartFile examTest, MultipartFile pv) throws IOException {
+        return ResponseEntity.ok(examService.update(updateExam,examTest,pv));
+    }
+    @GetMapping("{id}")
+    public ResponseEntity<ExamResponse> getById(@PathVariable  Integer id){
+        Exam exam= examService.getById(id);
+        return ResponseEntity.ok(ExamMapper.mapToExamResponse(exam));
+    }
 
 }

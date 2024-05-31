@@ -13,10 +13,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExamResponse {
+    private Integer id;
     private Date startDate;
     private Date endDate;
     private int exactTime;
     private int defaultTime;
     private String year;
     private String examTitle;
+    private String session;
 }
