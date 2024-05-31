@@ -58,8 +58,6 @@ public class ExamService {
 
         var exam = Exam.builder()
                 .start_date(examDto.getStartDate())
-                .exactTime(examDto.getExactTime())
-                .defaultTime(examDto.getDefaultTime())
                 .year(Year.parse(examDto.getYear()))
                 .build();
 
@@ -93,8 +91,10 @@ public class ExamService {
             LocalDateTime endDateTime;
             System.out.println("Type of this element: " + pedagogicalElement.getTitle());
             if (pedagogicalElement.getElementType().getTitle().equals("Module")) {
+                exam.setDefaultTime(120);
                 endDateTime = startDateTime.plusHours(2);
             } else {
+                exam.setDefaultTime(90);
                 endDateTime = startDateTime.plusHours(1).plusMinutes(30);
             }
             Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
