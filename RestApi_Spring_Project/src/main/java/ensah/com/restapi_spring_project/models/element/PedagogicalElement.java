@@ -22,12 +22,11 @@ public class PedagogicalElement {
 
     private String title;
 
-
-    @ManyToOne(cascade = CascadeType.ALL )
-    @JoinColumn(name = "prof_cord_id" )
+    @ManyToOne
+    @JoinColumn(name = "prof_cord_id")
     private Prof prof_cord;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "prof_ensg_id")
     private Prof prof_of_elem;
 
@@ -44,6 +43,5 @@ public class PedagogicalElement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id")
-    private Field field;;
-
+    private Field field;
 }

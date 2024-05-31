@@ -31,7 +31,6 @@ public class PedagogicalElementService {
             .collect(Collectors.toList());
     }
 
-
     private PedagogicalElementDto mapToPedacogicalElementDto(PedagogicalElement pedagogicalElement) {
 
         var profCordinator = ProfDto.builder()

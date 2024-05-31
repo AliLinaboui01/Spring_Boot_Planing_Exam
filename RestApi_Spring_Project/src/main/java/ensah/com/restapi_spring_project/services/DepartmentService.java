@@ -1,5 +1,6 @@
 package ensah.com.restapi_spring_project.services;
 
+import ensah.com.restapi_spring_project.Dto.Request.department.DepartmentRequest;
 import ensah.com.restapi_spring_project.Dto.Responce.department.DepartementDto;
 import ensah.com.restapi_spring_project.Dto.Responce.field.FieldResponse;
 import ensah.com.restapi_spring_project.models.element.Department;
@@ -36,16 +37,14 @@ public class DepartmentService {
                 .build();
     }
 
-    public ResponseEntity<String> create(Department department) {
-        if(department.getName()!= null) {
+    public ResponseEntity<String> create(DepartmentRequest request) {
+            var department = Department.builder()
+                    .name(request.getName())
+                    .build();
             departementRepository.save(department);
-            return ResponseEntity.ok("Department created successfully");
-        } else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to create this Department");
-        }
-    }
+        return ResponseEntity.ok("Department created successfully");
 
+    }
     public ResponseEntity<String> removeDepartment(Integer id) {
         Optional<Department> departmentOptional = departementRepository.findById(id);
         if (departmentOptional.isEmpty()) {

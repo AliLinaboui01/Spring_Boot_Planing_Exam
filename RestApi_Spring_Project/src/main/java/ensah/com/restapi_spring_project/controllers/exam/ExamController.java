@@ -36,10 +36,13 @@ public class ExamController {
 
     // create EXAM here we create info related to EXAM  and affect all other props
     @PostMapping("/create")
-    public ResponseEntity<ExamResponse> createExam (@RequestBody CreateExamDto createExamDto) {
+    public ResponseEntity<String> createExam (@RequestBody CreateExamDto createExamDto) {
         try {
             var createdExam = examService.createExam(createExamDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdExam);
+            if(createdExam != null){
+                return ResponseEntity.ok().body("exam create with success");
+            }
+            return ResponseEntity.ok().body("faild to create exam");
         } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         }

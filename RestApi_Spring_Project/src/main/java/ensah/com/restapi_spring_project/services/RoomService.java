@@ -22,6 +22,7 @@ public class RoomService {
        List<Room> rooms =  roomRepository.findAll();
        return rooms.stream().map(RoomMapper::mapToRoomResponse).collect(Collectors.toList());
     }
+
     public RoomResponse createRoom(CreateRoomDto roomDto){
        var room = Room.builder()
                .name(roomDto.getName())
@@ -33,4 +34,6 @@ public class RoomService {
                 .capacity(roomDto.getCapacity())
                 .build();
     }
+
+
 }

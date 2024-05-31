@@ -26,7 +26,6 @@ public class FiledService {
                 .map(this::mapToFiledDto)
                 .collect(Collectors.toList());
     }
-
     private FiledDto mapToFiledDto(Field field) {
         return FiledDto.builder()
                 .id(field.getId())
@@ -34,7 +33,6 @@ public class FiledService {
 
                 .build();
     }
-
 
     public FieldResponse createField(CreateFieldDto fieldDto) {
 

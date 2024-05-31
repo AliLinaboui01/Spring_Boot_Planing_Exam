@@ -14,4 +14,8 @@ public interface ExamRepository extends JpaRepository<Exam,Integer> {
 
     @Query("SELECT e FROM Exam e WHERE e.start_date < :end_date AND e.end_date > :start_date")
     List<Exam> findOverlappingExams(@Param("start_date") Date startDate, @Param("end_date") Date endDate);
+
+    @Query("SELECT e FROM Exam e WHERE e.pedagogicalElement.id = :elementId AND e.start_date < :endDate AND e.end_date > :startDate")
+    List<Exam> findByPedagogicalElementIdAndDateRange(@Param("elementId") Integer elementId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 }

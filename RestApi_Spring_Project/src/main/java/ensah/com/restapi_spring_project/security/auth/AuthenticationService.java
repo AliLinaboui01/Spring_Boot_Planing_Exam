@@ -1,6 +1,8 @@
 package ensah.com.restapi_spring_project.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ensah.com.restapi_spring_project.Dto.Responce.user.UserResponse;
+import ensah.com.restapi_spring_project.mappers.UserMapper;
 import ensah.com.restapi_spring_project.models.personnel.Admin;
 import ensah.com.restapi_spring_project.models.personnel.Prof;
 import ensah.com.restapi_spring_project.security.config.JwtService;
@@ -23,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +39,15 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+    public List<UserResponse> getAllAdmins(){
+        List<User> users= userRepository.findAllByRole(Role.ADMIN);
+        return users.stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
+    }
+    public List<UserResponse> getAllProfs(){
+        List<User> users= userRepository.findAllByRole(Role.PROFESSOR);
+        return users.stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
+    }
     public AuthenticationResponse register(RegisterDto request) {
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -44,12 +57,11 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .build();
         var savedUser =userRepository.save(user);
-// here i will se if User is admin i will persist also in Admin Entity
+        // here i will se if User is admin i will persist also in Admin Entity
       if(request.getRole() == Role.ADMIN) {
           Admin admin = new Admin();
           admin.setUser(savedUser);
           adminService.save(admin);
-
       }
       // here i will se if User is prof i will persist also in Admin Entity
       else if (request.getRole() == Role.PROFESSOR) {
@@ -133,5 +145,28 @@ public class AuthenticationService {
             }
 
         }
+    }
+
+    public UserResponse update(Integer id, UpdateRequest updateRequest){
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("user not fount"));
+        user.setEmail(updateRequest.getEmail());
+        user.setFirstName(updateRequest.getFirstName());
+        user.setLastName(updateRequest.getLastName());
+        user.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
+
+        if(user.getRole() == Role.ADMIN) {
+            Admin admin = adminService.getByUser(user);
+            admin.setUser(user);
+            adminService.save(admin);
+        }
+        // here i will se if User is prof i will persist also in Admin Entity
+        else if (user.getRole() == Role.PROFESSOR) {
+            Prof prof = profService.getByUser(user);
+            prof.setDepartment(prof.getDepartment());
+            prof.setField(prof.getField());
+            prof.setUser(user);
+            profService.save(prof);
+        }
+        return UserMapper.mapToUserResponse(user);
     }
 }

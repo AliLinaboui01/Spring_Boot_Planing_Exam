@@ -21,6 +21,7 @@ public class SemesterService {
         List<Semester>  semester = semesterRepository.findAll();
         return semester.stream().map(this::convertToDto).collect(Collectors.toList());
     }
+
     public SemesterResponse convertToDto(Semester semester){
         return SemesterResponse.builder()
                 .name(semester.getTitle())

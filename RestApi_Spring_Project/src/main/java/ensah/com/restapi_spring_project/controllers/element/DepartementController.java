@@ -1,6 +1,7 @@
 package ensah.com.restapi_spring_project.controllers.element;
 
 
+import ensah.com.restapi_spring_project.Dto.Request.department.DepartmentRequest;
 import ensah.com.restapi_spring_project.Dto.Responce.department.DepartementDto;
 import ensah.com.restapi_spring_project.Dto.Responce.field.FieldResponse;
 import ensah.com.restapi_spring_project.models.element.Department;
@@ -34,7 +35,7 @@ public class DepartementController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String>  createNewDepartment(@Valid @RequestBody Department department) {
+    public ResponseEntity<String>  createNewDepartment(@Valid @RequestBody DepartmentRequest department) {
         return departementService.create(department);
     }
 
