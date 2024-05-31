@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,21 +72,33 @@ public class GroupService {
     }
 
     // create grp just with grp name
-    public void save(Group group) {
-        groupRepository.save(group);
-    }
+
     // create group of profs
+    @Transactional
     public ResponseEntity<String> createGroupWithProfs(GroupDtoRequest groupDto) {
         try {
+            // Create and save the group first
             Group group = Group.builder()
                     .group_name(groupDto.getName())
                     .build();
+            group = groupRepository.save(group);
+
+            // Find the professors by IDs
             List<Prof> professors = profService.findProfessorsByIds(groupDto.getProfIds());
             if (professors.isEmpty()) {
                 throw new RuntimeException("No professors found with the provided IDs.");
             }
+
+            // Assign the saved group to the professors and save the professors
+            for (Prof prof : professors) {
+                prof.setGroup(group);
+                profService.save(prof);
+            }
+
+            // Update the group's list of professors and save it again if needed
             group.setGroup_prof(professors);
             groupRepository.save(group);
+
             return ResponseEntity.ok().body("Group created successfully with associated professors.");
         } catch (Exception e) {
             // Log the exception if necessary

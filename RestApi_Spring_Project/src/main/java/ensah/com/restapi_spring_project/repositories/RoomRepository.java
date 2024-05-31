@@ -16,5 +16,6 @@ public interface RoomRepository extends JpaRepository<Room,Integer> {
     @Query("SELECT r FROM Room r JOIN r.monitoringListInRoom m WHERE " +
             "m.exam.start_date < :endDate AND m.exam.end_date > :startDate")
     List<Room> findOccupiedRooms(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
-
+    @Query("SELECT r FROM Room r WHERE r.id NOT IN (SELECT m.room.id FROM Monitoring m)")
+    List<Room> findRoomsNotInMonitoring();
 }
