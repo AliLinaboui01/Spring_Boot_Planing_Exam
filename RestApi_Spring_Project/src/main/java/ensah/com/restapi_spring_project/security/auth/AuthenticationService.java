@@ -23,6 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -146,7 +147,7 @@ public class AuthenticationService {
 
         }
     }
-
+    @Transactional
     public UserResponse update(Integer id, UpdateRequest updateRequest){
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("user not fount"));
         user.setEmail(updateRequest.getEmail());
@@ -164,6 +165,7 @@ public class AuthenticationService {
             Prof prof = profService.getByUser(user);
             prof.setDepartment(prof.getDepartment());
             prof.setField(prof.getField());
+            prof.setGroup(prof.getGroup());
             prof.setUser(user);
             profService.save(prof);
         }

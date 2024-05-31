@@ -17,4 +17,5 @@ public class ProfDto {
     private String email;
     private String departement_name;
     private String field_name;
+    private String groupName;
 }
