@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomResponse {
+    private Integer id;
     private String name;
     private int capacity;
 }

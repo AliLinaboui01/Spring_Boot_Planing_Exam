@@ -159,6 +159,9 @@ public class ExamService {
             for (Prof prof : profs) {
                 if (!occupiedProfs.contains(prof)) {
                     listOfProf.add(prof);
+                    // Set the group reference in Prof
+                    prof.setGroup(prof.getGroup());
+                    profRepository.save(prof);
                     if (listOfProf.size() == monitoringDto.getProfNumber()) {
                         break;
                     }
@@ -183,11 +186,12 @@ public class ExamService {
         return ExamResponse.builder()
                 .defaultTime(exam.getDefaultTime())
                 .year(examDto.getYear())
-                .startDate(exam.getStart_date() )
+                .startDate(exam.getStart_date())
                 .endDate(exam.getEnd_date())
                 .exactTime(exam.getExactTime())
                 .build();
     }
+
 
     private String storeFile(MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
